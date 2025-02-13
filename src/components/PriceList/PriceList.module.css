@@ -2,13 +2,15 @@
   list-style: none;
   padding: 0;
   margin: 0;
+  background-color: #121212;
+  color: #e0e0e0;
 }
 
 .priceListItem {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid #333;
   padding: 10px 0;
 }
 
@@ -25,7 +27,7 @@
 .adjustButton {
   width: 30px;
   height: 30px;
-  background-color: #007bff;
+  background-color: #1e88e5;
   color: #fff;
   border: none;
   border-radius: 4px;
@@ -35,13 +37,15 @@
 }
 
 .adjustButton:hover {
-  background-color: #0056b3;
+  background-color: #1565c0;
 }
 
 .holdingsInput {
   width: 60px;
   padding: 5px;
   text-align: center;
-  border: 1px solid #ccc;
+  border: 1px solid #444;
   border-radius: 4px;
+  background-color: #222;
+  color: #e0e0e0;
 }
