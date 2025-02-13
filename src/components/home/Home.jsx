@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import styles from "./Home.module.css";
 import PriceList from "../PriceList/PriceList";
-import HoldingsForm from "../HoldingsForm/HoldingsForm";
 import PortfolioShowcase from "../PortfolioShowcase/PortfolioShowcase";
 import CryptoMenu from "../CryptoMenu/CryptoMenu";
-import { supportedCryptos } from "./supportedCryptos";
+import { supportedCryptos } from "./supportedCryptos.js";
 
 function Home() {
   const [selectedCryptos, setSelectedCryptos] = useState(
