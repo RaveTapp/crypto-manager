@@ -3,6 +3,37 @@
   margin: 20px;
 }
 
+.cryptoMenu {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.menuItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  padding: 5px;
+  border: 1px solid transparent;
+  transition: border 0.2s;
+}
+
+.menuItem:hover {
+  border: 1px solid #ccc;
+}
+
+.selected {
+  border: 1px solid #007bff;
+  border-radius: 4px;
+}
+
+.cryptoLogo {
+  width: 40px;
+  height: 40px;
+  margin-bottom: 5px;
+}
+
 .formGroup {
   margin-bottom: 10px;
 }

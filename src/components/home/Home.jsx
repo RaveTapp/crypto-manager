@@ -3,15 +3,13 @@ import styles from "./Home.module.css";
 import PriceList from "../PriceList/PriceList";
 import HoldingsForm from "../HoldingsForm/HoldingsForm";
 import PortfolioShowcase from "../PortfolioShowcase/PortfolioShowcase";
+import CryptoMenu from "../CryptoMenu/CryptoMenu";
 
 function Home() {
-  const [prices, setPrices] = useState({ BTCUSDT: 0, ETHUSDT: 0 });
-
-  const [btcHoldings, setBtcHoldings] = useState("");
-  const [ethHoldings, setEthHoldings] = useState("");
-
-  const [btcValue, setBtcValue] = useState(0);
-  const [ethValue, setEthValue] = useState(0);
+  const [selectedCryptos, setSelectedCryptos] = useState(supportedCryptos.map((c) => c.symbol));
+  const [holdings, setHoldings] = useState(Object.fromEntries(supportedCryptos.map(c => [c.symbol, ''])));
+  const [prices, setPrices] = useState({});
+  const [calculatedValues, setCalculatedValues] = useState({});
   const [totalValue, setTotalValue] = useState(0);
   const [submitted, setSubmitted] = useState(false);
 
@@ -19,40 +17,57 @@ function Home() {
     fetchPrices(setPrices);
   }, []);
 
-  // Handle form submission to calculate portfolio values
+  const toggleSelection = (symbol) => {
+    setSelectedCryptos((prevSelected) =>
+      prevSelected.includes(symbol) ? prevSelected.filter((s) => s !== symbol) : [...prevSelected, symbol]
+    );
+  };
+
+  const handleChange = (symbol, value) => {
+    setHoldings((prev) => ({ ...prev, [symbol]: value }));
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
-
-    const btcAmount = parseFloat(btcHoldings) || 0;
-    const ethAmount = parseFloat(ethHoldings) || 0;
-
-    const btcPrice = prices.BTCUSDT || 0;
-    const ethPrice = prices.ETHUSDT || 0;
-
-    const calculatedBtcValue = btcAmount * btcPrice;
-    const calculatedEthValue = ethAmount * ethPrice;
-
-    setBtcValue(calculatedBtcValue);
-    setEthValue(calculatedEthValue);
-    setTotalValue(calculatedBtcValue + calculatedEthValue);
+    let newCalculatedValues = {};
+    let sum = 0;
+    selectedCryptos.forEach((symbol) => {
+      const amount = parseFloat(holdings[symbol]) || 0;
+      const price = prices[symbol] || 0;
+      const value = amount * price;
+      newCalculatedValues[symbol] = value;
+      sum += value;
+    });
+    setCalculatedValues(newCalculatedValues);
+    setTotalValue(sum);
     setSubmitted(true);
   };
 
   return (
     <div className={styles.container}>
-      <PriceList prices={prices} />
+      <CryptoMenu
+        supportedCryptos={supportedCryptos}
+        selectedCryptos={selectedCryptos}
+        toggleSelection={toggleSelection}
+      />
+      <PriceList
+        supportedCryptos={supportedCryptos}
+        prices={prices}
+        selectedCryptos={selectedCryptos}
+      />
       <HoldingsForm
-        btcHoldings={btcHoldings}
-        setBtcHoldings={setBtcHoldings}
-        ethHoldings={ethHoldings}
-        setEthHoldings={setEthHoldings}
+        supportedCryptos={supportedCryptos}
+        holdings={holdings}
+        handleChange={handleChange}
         handleSubmit={handleSubmit}
+        selectedCryptos={selectedCryptos}
       />
       {submitted && (
         <PortfolioShowcase
-          btcValue={btcValue}
-          ethValue={ethValue}
+          supportedCryptos={supportedCryptos}
+          values={calculatedValues}
           totalValue={totalValue}
+          selectedCryptos={selectedCryptos}
         />
       )}
     </div>
@@ -60,6 +75,19 @@ function Home() {
 }
 
 export default Home;
+
+const supportedCryptos = [
+  {
+    symbol: 'BTCUSDT',
+    name: 'Bitcoin',
+    logo: 'https://cryptologos.cc/logos/bitcoin-btc-logo.png?v=013'
+  },
+  {
+    symbol: 'ETHUSDT',
+    name: 'Ethereum',
+    logo: 'https://cryptologos.cc/logos/ethereum-eth-logo.png?v=013'
+  }
+];
 
 async function fetchPrices(setPrices) {
   try {
