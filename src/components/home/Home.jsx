@@ -30,7 +30,7 @@ function Home() {
     );
   };
 
-  const handleChange = (symbol, value) => {
+  const handleHoldingsChange = (symbol, value) => {
     setHoldings((prev) => ({ ...prev, [symbol]: value }));
   };
 
@@ -57,18 +57,18 @@ function Home() {
         selectedCryptos={selectedCryptos}
         toggleSelection={toggleSelection}
       />
-      <PriceList
-        supportedCryptos={supportedCryptos}
-        prices={prices}
-        selectedCryptos={selectedCryptos}
-      />
-      <HoldingsForm
-        supportedCryptos={supportedCryptos}
-        holdings={holdings}
-        handleChange={handleChange}
-        handleSubmit={handleSubmit}
-        selectedCryptos={selectedCryptos}
-      />
+      <form onSubmit={handleSubmit}>
+        <PriceList
+          supportedCryptos={supportedCryptos}
+          prices={prices}
+          selectedCryptos={selectedCryptos}
+          holdings={holdings}
+          handleHoldingsChange={handleHoldingsChange}
+        />
+        <button type="submit" className={styles.button}>
+          Calculate Portfolio Value
+        </button>
+      </form>
       {submitted && (
         <PortfolioShowcase
           supportedCryptos={supportedCryptos}

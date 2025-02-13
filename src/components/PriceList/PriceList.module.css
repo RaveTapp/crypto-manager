@@ -1,0 +1,47 @@
+.priceList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.priceListItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #ddd;
+  padding: 10px 0;
+}
+
+.cryptoInfo {
+  flex: 1;
+  font-size: 16px;
+}
+
+.holdingsControl {
+  display: flex;
+  align-items: center;
+}
+
+.adjustButton {
+  width: 30px;
+  height: 30px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-size: 18px;
+  cursor: pointer;
+  margin: 0 5px;
+}
+
+.adjustButton:hover {
+  background-color: #0056b3;
+}
+
+.holdingsInput {
+  width: 60px;
+  padding: 5px;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
