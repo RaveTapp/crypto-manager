@@ -4,10 +4,15 @@ import PriceList from "../PriceList/PriceList";
 import HoldingsForm from "../HoldingsForm/HoldingsForm";
 import PortfolioShowcase from "../PortfolioShowcase/PortfolioShowcase";
 import CryptoMenu from "../CryptoMenu/CryptoMenu";
+import { supportedCryptos } from "./supportedCryptos";
 
 function Home() {
-  const [selectedCryptos, setSelectedCryptos] = useState(supportedCryptos.map((c) => c.symbol));
-  const [holdings, setHoldings] = useState(Object.fromEntries(supportedCryptos.map(c => [c.symbol, ''])));
+  const [selectedCryptos, setSelectedCryptos] = useState(
+    ["BTCUSDT"]
+  );
+  const [holdings, setHoldings] = useState(
+    Object.fromEntries(supportedCryptos.map((c) => [c.symbol, ""]))
+  );
   const [prices, setPrices] = useState({});
   const [calculatedValues, setCalculatedValues] = useState({});
   const [totalValue, setTotalValue] = useState(0);
@@ -19,7 +24,9 @@ function Home() {
 
   const toggleSelection = (symbol) => {
     setSelectedCryptos((prevSelected) =>
-      prevSelected.includes(symbol) ? prevSelected.filter((s) => s !== symbol) : [...prevSelected, symbol]
+      prevSelected.includes(symbol)
+        ? prevSelected.filter((s) => s !== symbol)
+        : [...prevSelected, symbol]
     );
   };
 
@@ -76,35 +83,17 @@ function Home() {
 
 export default Home;
 
-const supportedCryptos = [
-  {
-    symbol: 'BTCUSDT',
-    name: 'Bitcoin',
-    logo: 'https://cryptologos.cc/logos/bitcoin-btc-logo.png?v=013'
-  },
-  {
-    symbol: 'ETHUSDT',
-    name: 'Ethereum',
-    logo: 'https://cryptologos.cc/logos/ethereum-eth-logo.png?v=013'
-  }
-];
-
 async function fetchPrices(setPrices) {
   try {
-    const btcResponse = await fetch(
-      "https://data-api.binance.vision/api/v3/ticker/price?symbol=BTCUSDT"
-    );
-    const btcData = await btcResponse.json();
-
-    const ethResponse = await fetch(
-      "https://data-api.binance.vision/api/v3/ticker/price?symbol=ETHUSDT"
-    );
-    const ethData = await ethResponse.json();
-
-    setPrices({
-      BTCUSDT: parseFloat(btcData.price),
-      ETHUSDT: parseFloat(ethData.price),
-    });
+    const newPrices = {};
+    for (const crypto of supportedCryptos) {
+      const response = await fetch(
+        `https://data-api.binance.vision/api/v3/ticker/price?symbol=${crypto.symbol}`
+      );
+      const data = await response.json();
+      newPrices[crypto.symbol] = parseFloat(data.price);
+    }
+    setPrices(newPrices);
   } catch (error) {
     console.error("Error fetching prices:", error);
   }
