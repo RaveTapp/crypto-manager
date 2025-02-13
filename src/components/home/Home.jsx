@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import styles from "./Home.module.css";
 import PriceList from "../PriceList/PriceList";
 import CryptoMenu from "../CryptoMenu/CryptoMenu";
@@ -9,24 +9,23 @@ function Home() {
     const saved = localStorage.getItem("selectedCryptos");
     return saved ? JSON.parse(saved) : ["BTCUSDT"];
   });
-
   const [holdings, setHoldings] = useState(() => {
     const saved = localStorage.getItem("holdings");
     return saved
       ? JSON.parse(saved)
       : Object.fromEntries(supportedCryptos.map((c) => [c.symbol, ""]));
   });
-
-  const [prices, setPrices] = useState({});
+  const [prices, setPrices] = useState(() => {
+    const saved = localStorage.getItem("prices");
+    return saved ? JSON.parse(saved) : {};
+  });
   const [calculatedValues, setCalculatedValues] = useState({});
   const [totalValue, setTotalValue] = useState(0);
-
-  useEffect(() => {
-    fetchPrices(setPrices);
-  }, []);
+  const selectedCryptosRef = useRef(selectedCryptos);
 
   useEffect(() => {
     localStorage.setItem("selectedCryptos", JSON.stringify(selectedCryptos));
+    selectedCryptosRef.current = selectedCryptos;
   }, [selectedCryptos]);
 
   useEffect(() => {
@@ -34,9 +33,39 @@ function Home() {
   }, [holdings]);
 
   useEffect(() => {
+    localStorage.setItem("prices", JSON.stringify(prices));
+  }, [prices]);
+
+  const fetchPricesForSymbols = async (symbols) => {
+    try {
+      const newPrices = { ...prices };
+      for (const symbol of symbols) {
+        const response = await fetch(
+          `https://data-api.binance.vision/api/v3/ticker/price?symbol=${symbol}`
+        );
+        const data = await response.json();
+        newPrices[symbol] = parseFloat(data.price);
+      }
+      setPrices(newPrices);
+    } catch (error) {
+      console.error("Error fetching prices:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchPricesForSymbols(selectedCryptos);
+  }, [selectedCryptos]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      fetchPricesForSymbols(selectedCryptosRef.current);
+    }, 60000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
     let newCalculatedValues = {};
     let sum = 0;
-
     selectedCryptos.forEach((symbol) => {
       const amount = parseFloat(holdings[symbol]) || 0;
       const price = prices[symbol] || 0;
@@ -44,16 +73,13 @@ function Home() {
       newCalculatedValues[symbol] = value;
       sum += value;
     });
-
     setCalculatedValues(newCalculatedValues);
     setTotalValue(sum);
   }, [holdings, prices, selectedCryptos]);
 
   const toggleSelection = (symbol) => {
     setSelectedCryptos((prev) =>
-      prev.includes(symbol)
-        ? prev.filter((s) => s !== symbol)
-        : [...prev, symbol]
+      prev.includes(symbol) ? prev.filter((s) => s !== symbol) : [...prev, symbol]
     );
   };
 
@@ -84,19 +110,3 @@ function Home() {
 }
 
 export default Home;
-
-async function fetchPrices(setPrices) {
-  try {
-    const newPrices = {};
-    for (const crypto of supportedCryptos) {
-      const response = await fetch(
-        `https://data-api.binance.vision/api/v3/ticker/price?symbol=${crypto.symbol}`
-      );
-      const data = await response.json();
-      newPrices[crypto.symbol] = parseFloat(data.price);
-    }
-    setPrices(newPrices);
-  } catch (error) {
-    console.error("Error fetching prices:", error);
-  }
-}
