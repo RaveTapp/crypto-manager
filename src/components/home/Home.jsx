@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styles from "./Home.module.css";
 import PriceList from "../PriceList/PriceList";
-import PortfolioShowcase from "../PortfolioShowcase/PortfolioShowcase";
 import CryptoMenu from "../CryptoMenu/CryptoMenu";
 import { supportedCryptos } from "./supportedCryptos.js";
 
@@ -21,7 +20,6 @@ function Home() {
   const [prices, setPrices] = useState({});
   const [calculatedValues, setCalculatedValues] = useState({});
   const [totalValue, setTotalValue] = useState(0);
-  const [submitted, setSubmitted] = useState(false);
 
   useEffect(() => {
     fetchPrices(setPrices);
@@ -35,6 +33,22 @@ function Home() {
     localStorage.setItem("holdings", JSON.stringify(holdings));
   }, [holdings]);
 
+  useEffect(() => {
+    let newCalculatedValues = {};
+    let sum = 0;
+
+    selectedCryptos.forEach((symbol) => {
+      const amount = parseFloat(holdings[symbol]) || 0;
+      const price = prices[symbol] || 0;
+      const value = amount * price;
+      newCalculatedValues[symbol] = value;
+      sum += value;
+    });
+
+    setCalculatedValues(newCalculatedValues);
+    setTotalValue(sum);
+  }, [holdings, prices, selectedCryptos]);
+
   const toggleSelection = (symbol) => {
     setSelectedCryptos((prev) =>
       prev.includes(symbol)
@@ -47,22 +61,6 @@ function Home() {
     setHoldings((prev) => ({ ...prev, [symbol]: value }));
   };
 
-  const handleSubmit = (event) => {
-    event.preventDefault();
-    let newCalculatedValues = {};
-    let sum = 0;
-    selectedCryptos.forEach((symbol) => {
-      const amount = parseFloat(holdings[symbol]) || 0;
-      const price = prices[symbol] || 0;
-      const value = amount * price;
-      newCalculatedValues[symbol] = value;
-      sum += value;
-    });
-    setCalculatedValues(newCalculatedValues);
-    setTotalValue(sum);
-    setSubmitted(true);
-  };
-
   return (
     <div className={styles.container}>
       <CryptoMenu
@@ -70,19 +68,17 @@ function Home() {
         selectedCryptos={selectedCryptos}
         toggleSelection={toggleSelection}
       />
-      <form onSubmit={handleSubmit}>
-        <PriceList
-          supportedCryptos={supportedCryptos}
-          prices={prices}
-          selectedCryptos={selectedCryptos}
-          holdings={holdings}
-          handleHoldingsChange={handleHoldingsChange}
-          calculatedValues={calculatedValues}
-        />
-        <button type="submit" className={styles.button}>
-          Calculate Portfolio Value
-        </button>
-      </form>
+      <PriceList
+        supportedCryptos={supportedCryptos}
+        prices={prices}
+        selectedCryptos={selectedCryptos}
+        holdings={holdings}
+        handleHoldingsChange={handleHoldingsChange}
+        calculatedValues={calculatedValues}
+      />
+      <div className={styles.totalValue}>
+        <h2>Total Portfolio Value: ${totalValue.toFixed(2)}</h2>
+      </div>
     </div>
   );
 }
