@@ -1,51 +1,63 @@
 .priceList {
-  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
   padding: 0;
-  margin: 0;
-  background-color: #121212;
-  color: #e0e0e0;
+  list-style: none;
 }
 
 .priceListItem {
+  background-color: #1e1e1e;
+  color: #e0e0e0;
+  padding: 16px;
+  border-radius: 12px;
   display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: space-between;
-  border-bottom: 1px solid #333;
-  padding: 10px 0;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 .cryptoInfo {
-  flex: 1;
   font-size: 16px;
+  font-weight: bold;
+  margin-bottom: 12px;
 }
 
 .holdingsControl {
   display: flex;
   align-items: center;
+  gap: 8px;
 }
 
 .adjustButton {
-  width: 30px;
-  height: 30px;
-  background-color: #1e88e5;
-  color: #fff;
+  background-color: #333;
+  color: white;
   border: none;
-  border-radius: 4px;
-  font-size: 18px;
+  padding: 6px 12px;
+  font-size: 16px;
+  border-radius: 6px;
   cursor: pointer;
-  margin: 0 5px;
+  transition: background 0.2s;
 }
 
 .adjustButton:hover {
-  background-color: #1565c0;
+  background-color: #555;
 }
 
 .holdingsInput {
   width: 60px;
-  padding: 5px;
+  padding: 6px;
   text-align: center;
   border: 1px solid #444;
-  border-radius: 4px;
   background-color: #222;
-  color: #e0e0e0;
+  color: white;
+  border-radius: 6px;
+}
+
+.cryptoValue {
+  margin-top: 10px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #00ff99;
 }

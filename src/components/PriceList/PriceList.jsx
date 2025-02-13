@@ -7,6 +7,7 @@ export default function PriceList({
   selectedCryptos,
   holdings,
   handleHoldingsChange,
+  calculatedValues,
 }) {
   return (
     <div>
@@ -16,6 +17,8 @@ export default function PriceList({
           .filter((crypto) => selectedCryptos.includes(crypto.symbol))
           .map((crypto) => {
             const amount = holdings[crypto.symbol] || 0;
+            const value = calculatedValues[crypto.symbol] || 0;
+
             return (
               <li key={crypto.symbol} className={styles.priceListItem}>
                 <div className={styles.cryptoInfo}>
@@ -58,6 +61,9 @@ export default function PriceList({
                     +
                   </button>
                 </div>
+                <div className={styles.cryptoValue}>
+                  Portfolio Value: ${value.toFixed(2)}
+                </div>
               </li>
             );
           })}
@@ -65,4 +71,3 @@ export default function PriceList({
     </div>
   );
 }
-

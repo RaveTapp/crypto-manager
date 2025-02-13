@@ -6,12 +6,18 @@ import CryptoMenu from "../CryptoMenu/CryptoMenu";
 import { supportedCryptos } from "./supportedCryptos.js";
 
 function Home() {
-  const [selectedCryptos, setSelectedCryptos] = useState(
-    ["BTCUSDT"]
-  );
-  const [holdings, setHoldings] = useState(
-    Object.fromEntries(supportedCryptos.map((c) => [c.symbol, ""]))
-  );
+  const [selectedCryptos, setSelectedCryptos] = useState(() => {
+    const saved = localStorage.getItem("selectedCryptos");
+    return saved ? JSON.parse(saved) : ["BTCUSDT"];
+  });
+
+  const [holdings, setHoldings] = useState(() => {
+    const saved = localStorage.getItem("holdings");
+    return saved
+      ? JSON.parse(saved)
+      : Object.fromEntries(supportedCryptos.map((c) => [c.symbol, ""]));
+  });
+
   const [prices, setPrices] = useState({});
   const [calculatedValues, setCalculatedValues] = useState({});
   const [totalValue, setTotalValue] = useState(0);
@@ -21,11 +27,19 @@ function Home() {
     fetchPrices(setPrices);
   }, []);
 
+  useEffect(() => {
+    localStorage.setItem("selectedCryptos", JSON.stringify(selectedCryptos));
+  }, [selectedCryptos]);
+
+  useEffect(() => {
+    localStorage.setItem("holdings", JSON.stringify(holdings));
+  }, [holdings]);
+
   const toggleSelection = (symbol) => {
-    setSelectedCryptos((prevSelected) =>
-      prevSelected.includes(symbol)
-        ? prevSelected.filter((s) => s !== symbol)
-        : [...prevSelected, symbol]
+    setSelectedCryptos((prev) =>
+      prev.includes(symbol)
+        ? prev.filter((s) => s !== symbol)
+        : [...prev, symbol]
     );
   };
 
@@ -63,19 +77,12 @@ function Home() {
           selectedCryptos={selectedCryptos}
           holdings={holdings}
           handleHoldingsChange={handleHoldingsChange}
+          calculatedValues={calculatedValues}
         />
         <button type="submit" className={styles.button}>
           Calculate Portfolio Value
         </button>
       </form>
-      {submitted && (
-        <PortfolioShowcase
-          supportedCryptos={supportedCryptos}
-          values={calculatedValues}
-          totalValue={totalValue}
-          selectedCryptos={selectedCryptos}
-        />
-      )}
     </div>
   );
 }
