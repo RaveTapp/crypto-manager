@@ -1,6 +1,27 @@
+.wrapper {
+  width: 100%;
+}
+
+.searchContainer {
+  margin-bottom: 10px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.searchInput {
+  width: max(15%, 100px);
+  padding: 8px;
+  border: 1px solid #444;
+  border-radius: 8px;
+  background-color: #222;
+  color: #e0e0e0;
+}
+
 .cryptoMenu {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 10px;
   margin-bottom: 20px;
 }
@@ -17,6 +38,7 @@
   background-color: #1a1a1a;
   border-radius: 6px;
   text-align: center;
+  width: 100px;
 }
 
 .menuItem:hover {
