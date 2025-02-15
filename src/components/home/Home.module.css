@@ -11,17 +11,27 @@
   align-items: center;
   justify-content: space-between;
   gap: 10px;
-}
-
-.header h1 {
-  margin: 0;
+  position: relative;
 }
 
 .menuButton {
+  position: absolute;
+  left: 0;
   background: none;
   border: none;
   cursor: pointer;
   color: #e0e0e0;
+}
+
+.header h1 {
+  margin: 0 auto;
+  text-align: center;
+}
+
+.header h2 {
+  color: #00ff99;
+  position: absolute;
+  right: 0;
 }
 
 .content {

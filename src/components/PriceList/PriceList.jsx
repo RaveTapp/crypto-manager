@@ -61,7 +61,7 @@ export default function PriceList({
                   </button>
                 </div>
                 <div className={styles.cryptoValue}>
-                  Portfolio Value: ${value.toFixed(2)}
+                  Value: ${value.toFixed(2)}
                 </div>
               </li>
             );
