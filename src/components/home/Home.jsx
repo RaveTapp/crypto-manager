@@ -34,7 +34,13 @@ function Home() {
   useEffect(() => {
     localStorage.setItem("selectedCryptos", JSON.stringify(selectedCryptos));
     selectedCryptosRef.current = selectedCryptos;
-    fetchPricesForSymbols(selectedCryptos);
+    let newCryptos = [];
+    for (const crypto of selectedCryptos) {
+      if (!prices[crypto]) {
+        newCryptos.push(crypto);
+      }
+    }
+    fetchPricesForSymbols(newCryptos);
   }, [selectedCryptos]);
 
   useEffect(() => {
