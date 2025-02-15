@@ -1,8 +1,8 @@
 import React from "react";
 import styles from "./PriceList.module.css";
+import { supportedCryptos } from "../../supportedCryptos";
 
 export default function PriceList({
-  supportedCryptos,
   prices,
   selectedCryptos,
   holdings,
@@ -32,10 +32,11 @@ export default function PriceList({
                     onClick={() =>
                       handleHoldingsChange(
                         crypto.symbol,
-                        parseFloat(amount) - 1
+                        Math.max(0, parseFloat(amount) - 1)
                       )
                     }
                     className={styles.adjustButton}
+                    disabled={amount <= 0}
                   >
                     -
                   </button>
@@ -46,6 +47,7 @@ export default function PriceList({
                       handleHoldingsChange(crypto.symbol, e.target.value)
                     }
                     className={styles.holdingsInput}
+                    min="0"
                   />
                   <button
                     type="button"

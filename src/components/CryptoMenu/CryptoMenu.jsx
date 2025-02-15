@@ -1,7 +1,8 @@
 import React, { useState } from "react";
 import styles from "./CryptoMenu.module.css";
+import { supportedCryptos } from "../../supportedCryptos";
 
-export default function CryptoMenu({ supportedCryptos, selectedCryptos, toggleSelection }) {
+export default function CryptoMenu({ selectedCryptos, toggleSelection }) {
   const [searchQuery, setSearchQuery] = useState("");
 
   const filteredCryptos = supportedCryptos.filter((crypto) => {
