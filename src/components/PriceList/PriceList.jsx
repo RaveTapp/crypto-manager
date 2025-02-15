@@ -11,7 +11,6 @@ export default function PriceList({
 }) {
   return (
     <div>
-      <h1>Current Cryptocurrency Prices & Holdings</h1>
       <ul className={styles.priceList}>
         {supportedCryptos
           .filter((crypto) => selectedCryptos.includes(crypto.symbol))

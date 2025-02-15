@@ -1,6 +1,6 @@
 .container {
   font-family: Arial, sans-serif;
-  padding: 40px;
+  padding: min(5vh, 5vw);
   background-color: #121212;
   color: #e0e0e0;
   border-radius: 8px;
@@ -9,7 +9,12 @@
 .header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 10px;
+}
+
+.header h1 {
+  margin: 0;
 }
 
 .menuButton {
@@ -21,7 +26,9 @@
 
 .content {
   display: flex;
+  flex-direction: column;
   gap: 20px;
+  padding: 20px 0;
 }
 
 .formGroup {

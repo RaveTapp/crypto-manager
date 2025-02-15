@@ -103,6 +103,7 @@ function Home() {
           <Menu size={24} />
         </button>
         <h1>Crypto Portfolio</h1>
+        <h2>${totalValue.toFixed(2)}</h2>
       </div>
 
       <div className={styles.content}>
@@ -121,10 +122,6 @@ function Home() {
           handleHoldingsChange={handleHoldingsChange}
           calculatedValues={calculatedValues}
         />
-      </div>
-
-      <div className={styles.totalValue}>
-        <h2>Total Portfolio Value: ${totalValue.toFixed(2)}</h2>
       </div>
     </div>
   );
