@@ -5,7 +5,7 @@ import CryptoMenu from "../CryptoMenu/CryptoMenu";
 import { supportedCryptos } from "./supportedCryptos.js";
 import { Menu } from "lucide-react";
 
-//localStorage.clear();
+localStorage.clear();
 
 function Home() {
   const [cryptoMenuOpen, setCryptoMenuOpen] = useState(() => {
@@ -15,7 +15,7 @@ function Home() {
 
   const [selectedCryptos, setSelectedCryptos] = useState(() => {
     const saved = localStorage.getItem("selectedCryptos");
-    return saved ? JSON.parse(saved) : ["BTCUSDT"];
+    return saved ? JSON.parse(saved) : ["BTCUSDC"];
   });
   const [holdings, setHoldings] = useState(() => {
     const saved = localStorage.getItem("holdings");
