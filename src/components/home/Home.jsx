@@ -3,8 +3,11 @@ import styles from "./Home.module.css";
 import PriceList from "../PriceList/PriceList";
 import CryptoMenu from "../CryptoMenu/CryptoMenu";
 import { supportedCryptos } from "./supportedCryptos.js";
+import { Menu } from "lucide-react";
 
 function Home() {
+  const [menuOpen, setMenuOpen] = useState(false);
+
   const [selectedCryptos, setSelectedCryptos] = useState(() => {
     const saved = localStorage.getItem("selectedCryptos");
     return saved ? JSON.parse(saved) : ["BTCUSDT"];
@@ -89,19 +92,31 @@ function Home() {
 
   return (
     <div className={styles.container}>
-      <CryptoMenu
-        supportedCryptos={supportedCryptos}
-        selectedCryptos={selectedCryptos}
-        toggleSelection={toggleSelection}
-      />
-      <PriceList
-        supportedCryptos={supportedCryptos}
-        prices={prices}
-        selectedCryptos={selectedCryptos}
-        holdings={holdings}
-        handleHoldingsChange={handleHoldingsChange}
-        calculatedValues={calculatedValues}
-      />
+      <div className={styles.header}>
+        <button className={styles.menuButton} onClick={() => setMenuOpen(!menuOpen)}>
+          <Menu size={24} />
+        </button>
+        <h1>Crypto Portfolio</h1>
+      </div>
+
+      <div className={styles.content}>
+        {menuOpen && (
+          <CryptoMenu
+            supportedCryptos={supportedCryptos}
+            selectedCryptos={selectedCryptos}
+            toggleSelection={toggleSelection}
+          />
+        )}
+        <PriceList
+          supportedCryptos={supportedCryptos}
+          prices={prices}
+          selectedCryptos={selectedCryptos}
+          holdings={holdings}
+          handleHoldingsChange={handleHoldingsChange}
+          calculatedValues={calculatedValues}
+        />
+      </div>
+
       <div className={styles.totalValue}>
         <h2>Total Portfolio Value: ${totalValue.toFixed(2)}</h2>
       </div>

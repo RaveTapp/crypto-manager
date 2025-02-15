@@ -6,6 +6,24 @@
   border-radius: 8px;
 }
 
+.header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.menuButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #e0e0e0;
+}
+
+.content {
+  display: flex;
+  gap: 20px;
+}
+
 .formGroup {
   margin-bottom: 10px;
 }
