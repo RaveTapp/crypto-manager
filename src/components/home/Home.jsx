@@ -5,8 +5,13 @@ import CryptoMenu from "../CryptoMenu/CryptoMenu";
 import { supportedCryptos } from "./supportedCryptos.js";
 import { Menu } from "lucide-react";
 
+//localStorage.clear();
+
 function Home() {
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [cryptoMenuOpen, setCryptoMenuOpen] = useState(() => {
+    const saved = localStorage.getItem("cryptoMenuOpen");
+    return saved ? JSON.parse(saved) : true;
+  });
 
   const [selectedCryptos, setSelectedCryptos] = useState(() => {
     const saved = localStorage.getItem("selectedCryptos");
@@ -29,11 +34,16 @@ function Home() {
   useEffect(() => {
     localStorage.setItem("selectedCryptos", JSON.stringify(selectedCryptos));
     selectedCryptosRef.current = selectedCryptos;
+    fetchPricesForSymbols(selectedCryptos);
   }, [selectedCryptos]);
 
   useEffect(() => {
     localStorage.setItem("holdings", JSON.stringify(holdings));
   }, [holdings]);
+
+  useEffect(() => {
+    localStorage.setItem("cryptoMenuOpen", JSON.stringify(cryptoMenuOpen));
+  }, [cryptoMenuOpen]);
 
   useEffect(() => {
     localStorage.setItem("prices", JSON.stringify(prices));
@@ -54,10 +64,6 @@ function Home() {
       console.error("Error fetching prices:", error);
     }
   };
-
-  useEffect(() => {
-    fetchPricesForSymbols(selectedCryptos);
-  }, [selectedCryptos]);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -93,14 +99,14 @@ function Home() {
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <button className={styles.menuButton} onClick={() => setMenuOpen(!menuOpen)}>
+        <button className={styles.menuButton} onClick={() => setCryptoMenuOpen(!cryptoMenuOpen)}>
           <Menu size={24} />
         </button>
         <h1>Crypto Portfolio</h1>
       </div>
 
       <div className={styles.content}>
-        {menuOpen && (
+        {cryptoMenuOpen && (
           <CryptoMenu
             supportedCryptos={supportedCryptos}
             selectedCryptos={selectedCryptos}
