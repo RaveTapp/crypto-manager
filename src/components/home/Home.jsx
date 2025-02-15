@@ -5,7 +5,7 @@ import CryptoMenu from "../CryptoMenu/CryptoMenu";
 import { supportedCryptos } from "./supportedCryptos.js";
 import { Menu } from "lucide-react";
 
-localStorage.clear();
+//localStorage.clear();
 
 function Home() {
   const [cryptoMenuOpen, setCryptoMenuOpen] = useState(() => {

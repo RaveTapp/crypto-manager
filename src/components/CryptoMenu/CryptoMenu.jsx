@@ -8,7 +8,7 @@ export default function CryptoMenu({ supportedCryptos, selectedCryptos, toggleSe
     const lowerQuery = searchQuery.toLowerCase();
     return (
       crypto.name.toLowerCase().includes(lowerQuery) ||
-      crypto.symbol.toLowerCase().includes(lowerQuery)
+      crypto.acronym.toLowerCase().includes(lowerQuery)
     );
   });
 
