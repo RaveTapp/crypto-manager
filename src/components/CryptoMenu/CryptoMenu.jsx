@@ -28,11 +28,16 @@ export default function CryptoMenu({ selectedCryptos, toggleSelection }) {
         {filteredCryptos.map((crypto) => (
           <div
             key={crypto.symbol}
-            className={`${styles.menuItem} ${selectedCryptos.includes(crypto.symbol) ? styles.selected : ""
-              }`}
+            className={`${styles.menuItem} ${
+              selectedCryptos.includes(crypto.symbol) ? styles.selected : ""
+            }`}
             onClick={() => toggleSelection(crypto.symbol)}
           >
-            <img src={crypto.logo} alt={crypto.name} className={styles.cryptoLogo} />
+            <img
+              src={crypto.logo}
+              alt={crypto.name}
+              className={styles.cryptoLogo}
+            />
             <span>{crypto.name}</span>
           </div>
         ))}

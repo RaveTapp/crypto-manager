@@ -4,6 +4,7 @@ import PriceList from "../PriceList/PriceList";
 import CryptoMenu from "../CryptoMenu/CryptoMenu";
 import { useCryptoState } from "../../hooks/useCryptoState";
 import { Menu } from "lucide-react";
+import PortfolioSwitcher from "../PortfolioSwitcher/PortfolioSwitcher";
 
 //localStorage.clear();
 
@@ -26,7 +27,7 @@ function Home() {
         <button className={styles.menuButton} onClick={() => setCryptoMenuOpen(!cryptoMenuOpen)}>
           <Menu size={24} />
         </button>
-        <h1>Crypto Portfolio</h1>
+        <PortfolioSwitcher />
         <h2>${totalValue.toFixed(2)}</h2>
       </div>
 
