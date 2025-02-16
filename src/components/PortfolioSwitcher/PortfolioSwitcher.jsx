@@ -43,9 +43,9 @@ function PortfolioSwitcher({
       {showList && (
         <div className={styles.portfolioList}>
           {portfolios.map((p) => (
-            <div key={p.id} className={styles.portfolioItem}>
-              <span onClick={() => switchPortfolio(p.id)}>{p.name}</span>
-              <button className={styles.removeButton} onClick={() => removePortfolio(p.id)}>
+            <div key={p.id} className={styles.portfolioItem} onClick={() => switchPortfolio(p.id)}>
+              <span >{p.name}</span>
+              <button className={styles.removeButton} onClick={(event) => {removePortfolio(p.id); event.stopPropagation()}}>
                 <X size={16} />
               </button>
             </div>

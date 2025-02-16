@@ -23,7 +23,7 @@
   color: #e0e0e0;
 }
 
-.header :nth-child(2) {
+.header > :nth-child(2) {
   margin: 0 auto;
   text-align: center;
 }
