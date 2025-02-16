@@ -19,6 +19,7 @@
   font-weight: bold;
   flex-grow: 1;
   text-align: center;
+  padding: 8px;
 }
 
 .iconButton {
