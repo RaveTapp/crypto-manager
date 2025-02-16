@@ -19,15 +19,31 @@ function Home() {
     prices,
     calculatedValues,
     totalValue,
+    portfolios,
+    currentPortfolioId,
+    switchPortfolio,
+    renameCurrentPortfolio,
+    addPortfolio,
+    removePortfolio,
   } = useCryptoState();
 
   return (
     <div className={styles.container}>
       <div className={styles.header}>
-        <button className={styles.menuButton} onClick={() => setCryptoMenuOpen(!cryptoMenuOpen)}>
+        <button
+          className={styles.menuButton}
+          onClick={() => setCryptoMenuOpen(!cryptoMenuOpen)}
+        >
           <Menu size={24} />
         </button>
-        <PortfolioSwitcher />
+        <PortfolioSwitcher
+          portfolios={portfolios}
+          currentPortfolioId={currentPortfolioId}
+          switchPortfolio={switchPortfolio}
+          renameCurrentPortfolio={renameCurrentPortfolio}
+          addPortfolio={addPortfolio}
+          removePortfolio={removePortfolio}
+        />
         <h2>${totalValue.toFixed(2)}</h2>
       </div>
 
