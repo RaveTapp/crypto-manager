@@ -18,6 +18,42 @@
   color: #e0e0e0;
 }
 
+.checkboxLabel {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+  margin: 4px;
+}
+
+.checkboxLabel input[type="checkbox"] {
+  width: 16px;
+  height: 16px;
+  accent-color: #1e88e5;
+  cursor: pointer;
+}
+
+.checkboxLabel span {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(34, 34, 34, 0.95);
+  color: #e0e0e0;
+  padding: 4px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  font-size: 14px;
+  z-index: 10;
+  pointer-events: none;
+  border: #e0e0e0 1px solid;
+}
+
+.checkboxLabel:hover span {
+  display: block;
+}
+
 .cryptoMenu {
   display: flex;
   flex-wrap: wrap;

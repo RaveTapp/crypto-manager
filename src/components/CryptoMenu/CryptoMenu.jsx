@@ -4,13 +4,16 @@ import { supportedCryptos } from "../../supportedCryptos";
 
 export default function CryptoMenu({ selectedCryptos, toggleSelection }) {
   const [searchQuery, setSearchQuery] = useState("");
+  const [onlySelected, setOnlySelected] = useState(false);
 
   const filteredCryptos = supportedCryptos.filter((crypto) => {
     const lowerQuery = searchQuery.toLowerCase();
-    return (
+    const matchesSearch =
       crypto.name.toLowerCase().includes(lowerQuery) ||
-      crypto.acronym.toLowerCase().includes(lowerQuery)
-    );
+      crypto.acronym.toLowerCase().includes(lowerQuery);
+    return onlySelected
+      ? matchesSearch && selectedCryptos.includes(crypto.symbol)
+      : matchesSearch;
   });
 
   return (
@@ -23,6 +26,14 @@ export default function CryptoMenu({ selectedCryptos, toggleSelection }) {
           onChange={(e) => setSearchQuery(e.target.value)}
           className={styles.searchInput}
         />
+        <label className={styles.checkboxLabel}>
+          <input
+            type="checkbox"
+            checked={onlySelected}
+            onChange={(e) => setOnlySelected(e.target.checked)}
+          />
+          <span>Only Selected</span>
+        </label>
       </div>
       <div className={styles.cryptoMenu}>
         {filteredCryptos.map((crypto) => (
