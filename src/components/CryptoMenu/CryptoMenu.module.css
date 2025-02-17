@@ -2,11 +2,44 @@
   width: 100%;
 }
 
+.topBar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.sortButtons {
+  display: flex;
+  gap: 5px;
+}
+
+.sortButton {
+  background-color: #333;
+  border: none;
+  color: #e0e0e0;
+  padding: 6px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.sortButton:hover {
+  background-color: #222;
+}
+
+.activeSort {
+  background-color: #1e88e5;
+}
+
 .searchContainer {
   margin-bottom: 10px;
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 10px;
+  flex-grow: 1;
 }
 
 .searchInput {
@@ -20,8 +53,6 @@
 
 .checkboxLabel {
   position: relative;
-  display: inline-flex;
-  align-items: center;
   cursor: pointer;
   margin: 4px;
 }
@@ -91,4 +122,10 @@
   width: 40px;
   height: 40px;
   margin-bottom: 5px;
+}
+
+.cryptoStat {
+  margin-top: 5px;
+  font-size: 14px;
+  color: #00ff99;
 }
