@@ -32,10 +32,8 @@ export const supportedCryptos = [
   { symbol: "KAVAUSDT", acronym: "KAVA", name: "Kava", logo: "https://cryptologos.cc/logos/kava-kava-logo.svg" },
   { symbol: "LINKUSDC", acronym: "LINK", name: "Chainlink", logo: "https://cryptologos.cc/logos/chainlink-link-logo.svg" },
   { symbol: "LTCUSDC", acronym: "LTC", name: "Litecoin", logo: "https://cryptologos.cc/logos/litecoin-ltc-logo.svg" },
-  { symbol: "MATICUSDC", acronym: "MATIC", name: "Polygon", logo: "https://cryptologos.cc/logos/polygon-matic-logo.svg" },
   { symbol: "NEARUSDC", acronym: "NEAR", name: "Near Protocol", logo: "https://cryptologos.cc/logos/near-protocol-near-logo.svg" },
   { symbol: "OMUSDC", acronym: "OM", name: "MANTRA", logo: "https://cryptologos.cc/logos/mantra-om-logo.svg" },
-  { symbol: "RENUSDT", acronym: "REN", name: "Ren", logo: "https://cryptologos.cc/logos/ren-ren-logo.svg" },
   { symbol: "RUNEUSDC", acronym: "RUNE", name: "THORChain", logo: "https://cryptologos.cc/logos/thorchain-rune-logo.svg" },
   { symbol: "SANDUSDC", acronym: "SAND", name: "The Sandbox", logo: "https://cryptologos.cc/logos/the-sandbox-sand-logo.svg" },
   { symbol: "SHIBUSDC", acronym: "SHIB", name: "SHIBA INU", logo: "https://cryptologos.cc/logos/shiba-inu-shib-logo.svg" },
@@ -49,5 +47,5 @@ export const supportedCryptos = [
   { symbol: "XLMUSDC", acronym: "XLM", name: "Stellar", logo: "https://cryptologos.cc/logos/stellar-xlm-logo.svg" },
   { symbol: "XRPUSDC", acronym: "XRP", name: "Ripple", logo: "https://cryptologos.cc/logos/xrp-xrp-logo.svg" },
   { symbol: "XTZUSDC", acronym: "XTZ", name: "Tezos", logo: "https://cryptologos.cc/logos/tezos-xtz-logo.svg" },
-  { symbol: "ZECUSDC", acronym: "ZEC", name: "Zcash", logo: "https://cryptologos.cc/logos/zcash-zec-logo.svg" },
+  { symbol: "ZECUSDT", acronym: "ZEC", name: "Zcash", logo: "https://cryptologos.cc/logos/zcash-zec-logo.svg" },
 ];
