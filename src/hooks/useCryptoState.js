@@ -11,7 +11,9 @@ export function useCryptoState() {
       {
         id: 1,
         name: "Default Portfolio",
-        selectedCryptos: [{symbol: "BTCUSDC", acronym: "BTC", name: "Bitcoin"}],
+        selectedCryptos: [
+          { symbol: "BTCUSDC", acronym: "BTC", name: "Bitcoin", logo: "" },
+        ],
         holdings: Object.fromEntries(
           supportedCryptos.map((c) => [c.symbol, ""])
         ),
@@ -28,7 +30,9 @@ export function useCryptoState() {
     currentPortfolio.selectedCryptos
   );
   const [holdings, setHoldings] = useState(currentPortfolio.holdings);
-  const [marketData, setMarketData] = useState(() => getFromStorage("marketData", {}));
+  const [marketData, setMarketData] = useState(() =>
+    getFromStorage("marketData", {})
+  );
   const [calculatedValues, setCalculatedValues] = useState({});
   const [totalValue, setTotalValue] = useState(0);
   const [cryptoMenuOpen, setCryptoMenuOpen] = useState(true);
@@ -51,32 +55,25 @@ export function useCryptoState() {
         p.id === currentPortfolioId ? { ...p, selectedCryptos, holdings } : p
       )
     );
-  }, [selectedCryptos, holdings]);
+  }, [selectedCryptos, holdings, currentPortfolioId]);
 
   useEffect(() => {
     saveToStorage("marketData", marketData);
   }, [marketData]);
 
   useEffect(() => {
-    selectedCryptosRef.current = selectedCryptos;
-    const newCryptos = selectedCryptos.filter((crypto) => crypto.symbol !== marketData[crypto.symbol]);
-    
-    if (newCryptos.length > 0) {
-      fetchMarketData(setMarketData, newCryptos);
-    }
-  }, [selectedCryptos]);
+    fetchMarketData(supportedCryptos, setMarketData);
 
-  useEffect(() => {
-    fetchMarketData(setMarketData, supportedCryptos);
     const interval = setInterval(() => {
-      fetchMarketData(setMarketData, supportedCryptos);
+      fetchMarketData(supportedCryptos, setMarketData);
     }, 60000);
     return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
     let sum = 0;
-    const newCalculatedValues = selectedCryptos.reduce((acc, symbol) => {
+    const newCalculatedValues = selectedCryptos.reduce((acc, crypto) => {
+      const symbol = crypto.symbol;
       const amount = parseFloat(holdings[symbol]) || 0;
       const price = marketData[symbol]?.price || 0;
       acc[symbol] = amount * price;
@@ -88,11 +85,14 @@ export function useCryptoState() {
   }, [holdings, marketData, selectedCryptos]);
 
   const toggleSelection = (symbol) => {
-    setSelectedCryptos((prev) =>
-      prev.includes({symbol: symbol})
-        ? prev.filter((s) => s !== symbol)
-        : [...prev, {symbol}]
-    );
+    setSelectedCryptos((prev) => {
+      if (prev.some((item) => item.symbol === symbol)) {
+        return prev.filter((item) => item.symbol !== symbol);
+      } else {
+        const cryptoObj = supportedCryptos.find((c) => c.symbol === symbol);
+        return cryptoObj ? [...prev, cryptoObj] : prev;
+      }
+    });
   };
 
   const handleHoldingsChange = (symbol, value) => {
@@ -117,7 +117,9 @@ export function useCryptoState() {
     const newPortfolio = {
       id: newId,
       name: "New Portfolio",
-      selectedCryptos: ["BTCUSDC"],
+      selectedCryptos: [
+        { symbol: "BTCUSDC", acronym: "BTC", name: "Bitcoin", logo: "" },
+      ],
       holdings: Object.fromEntries(supportedCryptos.map((c) => [c.symbol, ""])),
     };
     setPortfolios([...portfolios, newPortfolio]);

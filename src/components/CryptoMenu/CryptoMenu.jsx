@@ -13,17 +13,15 @@ export default function CryptoMenu({ marketData, selectedCryptos, toggleSelectio
       crypto.name.toLowerCase().includes(lowerQuery) ||
       crypto.acronym.toLowerCase().includes(lowerQuery);
     return onlySelected
-      ? matchesSearch && selectedCryptos.includes(crypto.symbol)
+      ? matchesSearch && selectedCryptos.find(el => el.symbol == crypto.symbol)
       : matchesSearch;
   });
 
   const sortedCryptos = filteredCryptos.slice().sort((a, b) => {
-    //console.log(marketData);
     const dataA = marketData[a.symbol] || {};
     const dataB = marketData[b.symbol] || {};
     switch (sortCriteria) {
       case "price":
-        //console.log(dataB.price);
         return (
           parseFloat(dataB.price || 0) - parseFloat(dataA.price || 0)
         );
@@ -154,7 +152,7 @@ export default function CryptoMenu({ marketData, selectedCryptos, toggleSelectio
             <div
               key={crypto.symbol}
               className={`${styles.menuItem} ${
-                selectedCryptos.includes(crypto.symbol) ? styles.selected : ""
+                selectedCryptos.find(el => el.symbol == crypto.symbol) ? styles.selected : ""
               }`}
               onClick={() => toggleSelection(crypto.symbol)}
             >

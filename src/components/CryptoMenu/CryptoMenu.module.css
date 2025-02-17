@@ -135,8 +135,7 @@
 }
 
 .menuItem:hover {
-  border: 1px solid #444;
-  background-color: #222;
+  background-color: #333;
 }
 
 .selected {
