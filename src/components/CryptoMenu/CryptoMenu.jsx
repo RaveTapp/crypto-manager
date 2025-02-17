@@ -20,7 +20,10 @@ export default function CryptoMenu({ selectedCryptos, toggleSelection }) {
       const results = await Promise.all(promises);
       const dataMap = {};
       supportedCryptos.forEach((crypto, index) => {
-        dataMap[crypto.symbol] = results[index];
+        dataMap[crypto.symbol] = {
+          lastPrice: results[index].lastPrice,
+          priceChangePercent: results[index].priceChangePercent,
+        };
       });
       setMarketData(dataMap);
     }
@@ -96,13 +99,24 @@ export default function CryptoMenu({ selectedCryptos, toggleSelection }) {
           <div className={styles.tooltipWrapper}>
             <button
               className={`${styles.sortButton} ${
+                sortCriteria === "marketCap" ? styles.activeSort : ""
+              }`}
+              onClick={() => setSortCriteria("marketCap")}
+            >
+              M
+            </button>
+            <span className={styles.tooltip}>Market Cap</span>
+          </div>
+          <div className={styles.tooltipWrapper}>
+            <button
+              className={`${styles.sortButton} ${
                 sortCriteria === "gain" ? styles.activeSort : ""
               }`}
               onClick={() => setSortCriteria("gain")}
             >
               G
             </button>
-            <span className={styles.tooltip}>Gain</span>
+            <span className={styles.tooltip}>24h Gain</span>
           </div>
           <div className={styles.tooltipWrapper}>
             <button
@@ -113,18 +127,7 @@ export default function CryptoMenu({ selectedCryptos, toggleSelection }) {
             >
               L
             </button>
-            <span className={styles.tooltip}>Loss</span>
-          </div>
-          <div className={styles.tooltipWrapper}>
-            <button
-              className={`${styles.sortButton} ${
-                sortCriteria === "marketCap" ? styles.activeSort : ""
-              }`}
-              onClick={() => setSortCriteria("marketCap")}
-            >
-              M
-            </button>
-            <span className={styles.tooltip}>Market Cap</span>
+            <span className={styles.tooltip}>24h Loss</span>
           </div>
         </div>
         <div className={styles.searchContainer}>
@@ -148,7 +151,7 @@ export default function CryptoMenu({ selectedCryptos, toggleSelection }) {
       <div className={styles.cryptoMenu}>
         {sortedCryptos.map((crypto) => {
           const data = marketData[crypto.symbol];
-          let statValue = "N/A";
+          let statValue = "";
           if (
             sortCriteria === "price" ||
             (sortCriteria === "alphabetical" && data)
@@ -160,9 +163,9 @@ export default function CryptoMenu({ selectedCryptos, toggleSelection }) {
           ) {
             const pct = parseFloat(data.priceChangePercent).toFixed(2) + "%";
             statValue = pct;
-          } else if (sortCriteria === "marketCap" && data) {
-            statValue = `$${parseFloat(data.quoteVolume).toFixed(2)}`;
-          }
+          }//  else if (sortCriteria === "marketCap" && data) {
+          //   statValue = `$${parseFloat(data.quoteVolume).toFixed(2)}`;
+          // }
           const isNegative =
             (sortCriteria === "gain" || sortCriteria === "loss") &&
             data &&
