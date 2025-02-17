@@ -6,7 +6,7 @@ import { useCryptoState } from "../../hooks/useCryptoState";
 import { Menu } from "lucide-react";
 import PortfolioSwitcher from "../PortfolioSwitcher/PortfolioSwitcher";
 
-//localStorage.clear();
+localStorage.clear();
 
 function Home() {
   const {
@@ -16,7 +16,7 @@ function Home() {
     toggleSelection,
     holdings,
     handleHoldingsChange,
-    prices,
+    marketData,
     calculatedValues,
     totalValue,
     portfolios,
@@ -50,12 +50,13 @@ function Home() {
       <div className={styles.content}>
         {cryptoMenuOpen && (
           <CryptoMenu
+            marketData={marketData}
             selectedCryptos={selectedCryptos}
             toggleSelection={toggleSelection}
           />
         )}
         <PriceList
-          prices={prices}
+          marketData={marketData}
           selectedCryptos={selectedCryptos}
           holdings={holdings}
           handleHoldingsChange={handleHoldingsChange}

@@ -2,33 +2,10 @@ import React, { useState, useEffect } from "react";
 import styles from "./CryptoMenu.module.css";
 import { supportedCryptos } from "../../supportedCryptos";
 
-export default function CryptoMenu({ selectedCryptos, toggleSelection }) {
+export default function CryptoMenu({ marketData, selectedCryptos, toggleSelection }) {
   const [searchQuery, setSearchQuery] = useState("");
   const [onlySelected, setOnlySelected] = useState(false);
-  const [marketData, setMarketData] = useState({});
   const [sortCriteria, setSortCriteria] = useState("alphabetical");
-
-  useEffect(() => {
-    async function fetchAllMarketData() {
-      const promises = supportedCryptos.map((crypto) =>
-        fetch(
-          `https://api.binance.com/api/v3/ticker/24hr?symbol=${crypto.symbol}`
-        )
-          .then((res) => res.json())
-          .catch(() => null)
-      );
-      const results = await Promise.all(promises);
-      const dataMap = {};
-      supportedCryptos.forEach((crypto, index) => {
-        dataMap[crypto.symbol] = {
-          lastPrice: results[index].lastPrice,
-          priceChangePercent: results[index].priceChangePercent,
-        };
-      });
-      setMarketData(dataMap);
-    }
-    fetchAllMarketData();
-  }, []);
 
   const filteredCryptos = supportedCryptos.filter((crypto) => {
     const lowerQuery = searchQuery.toLowerCase();
@@ -41,12 +18,14 @@ export default function CryptoMenu({ selectedCryptos, toggleSelection }) {
   });
 
   const sortedCryptos = filteredCryptos.slice().sort((a, b) => {
+    //console.log(marketData);
     const dataA = marketData[a.symbol] || {};
     const dataB = marketData[b.symbol] || {};
     switch (sortCriteria) {
       case "price":
+        //console.log(dataB.price);
         return (
-          parseFloat(dataB.lastPrice || 0) - parseFloat(dataA.lastPrice || 0)
+          parseFloat(dataB.price || 0) - parseFloat(dataA.price || 0)
         );
       case "gain":
         return (
@@ -156,7 +135,7 @@ export default function CryptoMenu({ selectedCryptos, toggleSelection }) {
             sortCriteria === "price" ||
             (sortCriteria === "alphabetical" && data)
           ) {
-            statValue = `$${parseFloat(data.lastPrice).toFixed(2)}`;
+            statValue = `$${parseFloat(data.price).toFixed(2)}`;
           } else if (
             (sortCriteria === "gain" || sortCriteria === "loss") &&
             data

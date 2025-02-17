@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from "react";
 import { getFromStorage, saveToStorage } from "../utils/localStorageUtils";
-import { fetchPricesForSymbols } from "../services/cryptoService";
+import { fetchMarketData } from "../services/cryptoService";
 import { supportedCryptos } from "../supportedCryptos";
 
 export function useCryptoState() {
@@ -11,7 +11,7 @@ export function useCryptoState() {
       {
         id: 1,
         name: "Default Portfolio",
-        selectedCryptos: ["BTCUSDC"],
+        selectedCryptos: [{symbol: "BTCUSDC", acronym: "BTC", name: "Bitcoin"}],
         holdings: Object.fromEntries(
           supportedCryptos.map((c) => [c.symbol, ""])
         ),
@@ -28,7 +28,7 @@ export function useCryptoState() {
     currentPortfolio.selectedCryptos
   );
   const [holdings, setHoldings] = useState(currentPortfolio.holdings);
-  const [prices, setPrices] = useState(() => getFromStorage("prices", {}));
+  const [marketData, setMarketData] = useState(() => getFromStorage("marketData", {}));
   const [calculatedValues, setCalculatedValues] = useState({});
   const [totalValue, setTotalValue] = useState(0);
   const [cryptoMenuOpen, setCryptoMenuOpen] = useState(true);
@@ -54,20 +54,22 @@ export function useCryptoState() {
   }, [selectedCryptos, holdings]);
 
   useEffect(() => {
-    saveToStorage("prices", prices);
-  }, [prices]);
+    saveToStorage("marketData", marketData);
+  }, [marketData]);
 
   useEffect(() => {
     selectedCryptosRef.current = selectedCryptos;
-    const newCryptos = selectedCryptos.filter((symbol) => !prices[symbol]);
+    const newCryptos = selectedCryptos.filter((crypto) => crypto.symbol !== marketData[crypto.symbol]);
+    
     if (newCryptos.length > 0) {
-      fetchPricesForSymbols(newCryptos, setPrices);
+      fetchMarketData(setMarketData, newCryptos);
     }
   }, [selectedCryptos]);
 
   useEffect(() => {
+    fetchMarketData(setMarketData, supportedCryptos);
     const interval = setInterval(() => {
-      fetchPricesForSymbols(selectedCryptosRef.current, setPrices);
+      fetchMarketData(setMarketData, supportedCryptos);
     }, 60000);
     return () => clearInterval(interval);
   }, []);
@@ -76,20 +78,20 @@ export function useCryptoState() {
     let sum = 0;
     const newCalculatedValues = selectedCryptos.reduce((acc, symbol) => {
       const amount = parseFloat(holdings[symbol]) || 0;
-      const price = prices[symbol] || 0;
+      const price = marketData[symbol]?.price || 0;
       acc[symbol] = amount * price;
       sum += amount * price;
       return acc;
     }, {});
     setCalculatedValues(newCalculatedValues);
     setTotalValue(sum);
-  }, [holdings, prices, selectedCryptos]);
+  }, [holdings, marketData, selectedCryptos]);
 
   const toggleSelection = (symbol) => {
     setSelectedCryptos((prev) =>
-      prev.includes(symbol)
+      prev.includes({symbol: symbol})
         ? prev.filter((s) => s !== symbol)
-        : [...prev, symbol]
+        : [...prev, {symbol}]
     );
   };
 
@@ -138,7 +140,7 @@ export function useCryptoState() {
     toggleSelection,
     holdings,
     handleHoldingsChange,
-    prices,
+    marketData,
     calculatedValues,
     totalValue,
     portfolios,

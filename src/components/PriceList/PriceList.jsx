@@ -3,7 +3,7 @@ import styles from "./PriceList.module.css";
 import { supportedCryptos } from "../../supportedCryptos";
 
 export default function PriceList({
-  prices,
+  marketData,
   selectedCryptos,
   holdings,
   handleHoldingsChange,
@@ -12,8 +12,7 @@ export default function PriceList({
   return (
     <div>
       <ul className={styles.priceList}>
-        {supportedCryptos
-          .filter((crypto) => selectedCryptos.includes(crypto.symbol))
+        {selectedCryptos
           .map((crypto) => {
             const amount = holdings[crypto.symbol] || 0;
             const value = calculatedValues[crypto.symbol] || 0;
@@ -23,7 +22,7 @@ export default function PriceList({
                 <div className={styles.cryptoInfo}>
                   <span>
                     {crypto.name} ({crypto.symbol}): $
-                    {prices[crypto.symbol]?.toFixed(2) || "N/A"}
+                    {parseFloat(marketData[crypto.symbol]?.price) || ""} 
                   </span>
                 </div>
                 <div className={styles.holdingsControl}>
