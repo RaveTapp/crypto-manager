@@ -33,6 +33,32 @@
   background-color: #1e88e5;
 }
 
+.tooltipWrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip {
+  display: none;
+  position: absolute;
+  bottom: calc(100% + 6px);
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(34, 34, 34, 0.95);
+  color: #e0e0e0;
+  padding: 4px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+  font-size: 14px;
+  z-index: 10;
+  pointer-events: none;
+  border: 1px solid #e0e0e0;
+}
+
+.tooltipWrapper:hover .tooltip {
+  display: block;
+}
+
 .searchContainer {
   margin-bottom: 10px;
   display: flex;
@@ -78,7 +104,7 @@
   font-size: 14px;
   z-index: 10;
   pointer-events: none;
-  border: #e0e0e0 1px solid;
+  border: 1px solid #e0e0e0;
 }
 
 .checkboxLabel:hover span {

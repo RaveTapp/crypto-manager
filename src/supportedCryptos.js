@@ -19,7 +19,6 @@ export const supportedCryptos = [
   { symbol: "EOSUSDC", acronym: "EOS", name: "EOS", logo: "https://cryptologos.cc/logos/eos-eos-logo.svg?v=013" },
   { symbol: "ETHUSDC", acronym: "ETH", name: "Ethereum", logo: "https://cryptologos.cc/logos/ethereum-eth-logo.svg?v=013" },
   { symbol: "FILUSDC", acronym: "FIL", name: "Filecoin", logo: "https://cryptologos.cc/logos/filecoin-fil-logo.svg?v=013" },
-  { symbol: "FTMUSDC", acronym: "FTM", name: "Fantom", logo: "https://cryptologos.cc/logos/fantom-ftm-logo.svg?v=013" },
   { symbol: "GALAUSDC", acronym: "GALA", name: "Gala", logo: "https://cryptologos.cc/logos/gala-gala-logo.svg?v=013" },
   { symbol: "GRTUSDT", acronym: "GRT", name: "The Graph", logo: "https://cryptologos.cc/logos/the-graph-grt-logo.svg?v=013" },
   { symbol: "HBARUSDC", acronym: "HBAR", name: "Hedera Hashgraph", logo: "https://cryptologos.cc/logos/hedera-hbar-logo.svg?v=040" },
