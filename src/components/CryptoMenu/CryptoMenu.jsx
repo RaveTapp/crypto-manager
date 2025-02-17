@@ -2,7 +2,11 @@ import React, { useState, useEffect } from "react";
 import styles from "./CryptoMenu.module.css";
 import { supportedCryptos } from "../../supportedCryptos";
 
-export default function CryptoMenu({ marketData, selectedCryptos, toggleSelection }) {
+export default function CryptoMenu({
+  marketData,
+  selectedCryptos,
+  toggleSelection,
+}) {
   const [searchQuery, setSearchQuery] = useState("");
   const [onlySelected, setOnlySelected] = useState(false);
   const [sortCriteria, setSortCriteria] = useState("alphabetical");
@@ -13,7 +17,8 @@ export default function CryptoMenu({ marketData, selectedCryptos, toggleSelectio
       crypto.name.toLowerCase().includes(lowerQuery) ||
       crypto.acronym.toLowerCase().includes(lowerQuery);
     return onlySelected
-      ? matchesSearch && selectedCryptos.find(el => el.symbol == crypto.symbol)
+      ? matchesSearch &&
+          selectedCryptos.find((el) => el.symbol == crypto.symbol)
       : matchesSearch;
   });
 
@@ -22,9 +27,7 @@ export default function CryptoMenu({ marketData, selectedCryptos, toggleSelectio
     const dataB = marketData[b.symbol] || {};
     switch (sortCriteria) {
       case "price":
-        return (
-          parseFloat(dataB.price || 0) - parseFloat(dataA.price || 0)
-        );
+        return parseFloat(dataB.price || 0) - parseFloat(dataA.price || 0);
       case "gain":
         return (
           parseFloat(dataB.priceChangePercent || 0) -
@@ -107,23 +110,21 @@ export default function CryptoMenu({ marketData, selectedCryptos, toggleSelectio
             <span className={styles.tooltip}>24h Loss</span>
           </div>
         </div>
-        <div className={styles.searchContainer}>
+        <input
+          type="text"
+          placeholder="Search cryptos..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className={styles.searchInput}
+        />
+        <label className={styles.checkboxLabel}>
           <input
-            type="text"
-            placeholder="Search cryptos..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className={styles.searchInput}
+            type="checkbox"
+            checked={onlySelected}
+            onChange={(e) => setOnlySelected(e.target.checked)}
           />
-          <label className={styles.checkboxLabel}>
-            <input
-              type="checkbox"
-              checked={onlySelected}
-              onChange={(e) => setOnlySelected(e.target.checked)}
-            />
-            <span>Only Selected</span>
-          </label>
-        </div>
+          <span>Only Selected</span>
+        </label>
       </div>
       <div className={styles.cryptoMenu}>
         {sortedCryptos.map((crypto) => {
@@ -140,7 +141,7 @@ export default function CryptoMenu({ marketData, selectedCryptos, toggleSelectio
           ) {
             const pct = parseFloat(data.priceChangePercent).toFixed(2) + "%";
             statValue = pct;
-          }//  else if (sortCriteria === "marketCap" && data) {
+          } //  else if (sortCriteria === "marketCap" && data) {
           //   statValue = `$${parseFloat(data.quoteVolume).toFixed(2)}`;
           // }
           const isNegative =
@@ -152,7 +153,9 @@ export default function CryptoMenu({ marketData, selectedCryptos, toggleSelectio
             <div
               key={crypto.symbol}
               className={`${styles.menuItem} ${
-                selectedCryptos.find(el => el.symbol == crypto.symbol) ? styles.selected : ""
+                selectedCryptos.find((el) => el.symbol == crypto.symbol)
+                  ? styles.selected
+                  : ""
               }`}
               onClick={() => toggleSelection(crypto.symbol)}
             >
