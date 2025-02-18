@@ -1,117 +1,52 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import styles from "./CryptoMenu.module.css";
 import { supportedCryptos } from "../../supportedCryptos";
+import { useCryptoMenuState } from "../../hooks/useCryptoMenuState";
 
-const formatter = Intl.NumberFormat('en', { notation: 'compact' });
+const formatter = Intl.NumberFormat("en", { notation: "compact" });
 
 export default function CryptoMenu({
   marketData,
   selectedCryptos,
   toggleSelection,
 }) {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [onlySelected, setOnlySelected] = useState(false);
-  const [sortCriteria, setSortCriteria] = useState("alphabetical");
-
-  const filteredCryptos = supportedCryptos.filter((crypto) => {
-    const lowerQuery = searchQuery.toLowerCase();
-    const matchesSearch =
-      crypto.name.toLowerCase().includes(lowerQuery) ||
-      crypto.acronym.toLowerCase().includes(lowerQuery);
-    return onlySelected
-      ? matchesSearch &&
-          selectedCryptos.find((el) => el.symbol == crypto.symbol)
-      : matchesSearch;
-  });
-
-  const sortedCryptos = filteredCryptos.slice().sort((a, b) => {
-    const dataA = marketData[a.symbol] || {};
-    const dataB = marketData[b.symbol] || {};
-    switch (sortCriteria) {
-      case "price":
-        return parseFloat(dataB.price || 0) - parseFloat(dataA.price || 0);
-      case "gain":
-        return (
-          parseFloat(dataB.priceChangePercent || 0) -
-          parseFloat(dataA.priceChangePercent || 0)
-        );
-      case "loss":
-        return (
-          parseFloat(dataA.priceChangePercent || 0) -
-          parseFloat(dataB.priceChangePercent || 0)
-        );
-      case "marketCap":
-        return (
-          parseFloat(b.supply * dataB.price || 0) -
-          parseFloat(a.supply * dataA.price || 0)
-        );
-      case "alphabetical":
-        return a.name.localeCompare(b.name);
-      default:
-        return 0;
-    }
-  });
+  const {
+    searchQuery,
+    setSearchQuery,
+    onlySelected,
+    setOnlySelected,
+    sortCriteria,
+    setSortCriteria,
+    maxCoins,
+    setMaxCoins,
+    sortedCryptos,
+  } = useCryptoMenuState(supportedCryptos, marketData, selectedCryptos);
 
   return (
     <div className={styles.wrapper}>
       <div className={styles.topBar}>
         <div className={styles.sortButtons}>
-          <div className={styles.tooltipWrapper}>
-            <button
-              className={`${styles.sortButton} ${
-                sortCriteria === "alphabetical" ? styles.activeSort : ""
-              }`}
-              onClick={() => setSortCriteria("alphabetical")}
-            >
-              A
-            </button>
-            <span className={styles.tooltip}>Alphabetical</span>
-          </div>
-          <div className={styles.tooltipWrapper}>
-            <button
-              className={`${styles.sortButton} ${
-                sortCriteria === "price" ? styles.activeSort : ""
-              }`}
-              onClick={() => setSortCriteria("price")}
-            >
-              P
-            </button>
-            <span className={styles.tooltip}>Price</span>
-          </div>
-          <div className={styles.tooltipWrapper}>
-            <button
-              className={`${styles.sortButton} ${
-                sortCriteria === "marketCap" ? styles.activeSort : ""
-              }`}
-              onClick={() => setSortCriteria("marketCap")}
-            >
-              M
-            </button>
-            <span className={styles.tooltip}>FDV Market Cap</span>
-          </div>
-          <div className={styles.tooltipWrapper}>
-            <button
-              className={`${styles.sortButton} ${
-                sortCriteria === "gain" ? styles.activeSort : ""
-              }`}
-              onClick={() => setSortCriteria("gain")}
-            >
-              G
-            </button>
-            <span className={styles.tooltip}>24h Gain</span>
-          </div>
-          <div className={styles.tooltipWrapper}>
-            <button
-              className={`${styles.sortButton} ${
-                sortCriteria === "loss" ? styles.activeSort : ""
-              }`}
-              onClick={() => setSortCriteria("loss")}
-            >
-              L
-            </button>
-            <span className={styles.tooltip}>24h Loss</span>
-          </div>
+          {[
+            { label: "A", criteria: "alphabetical", tooltip: "Alphabetical" },
+            { label: "P", criteria: "price", tooltip: "Price" },
+            { label: "M", criteria: "marketCap", tooltip: "FDV Market Cap" },
+            { label: "G", criteria: "gain", tooltip: "24h Gain" },
+            { label: "L", criteria: "loss", tooltip: "24h Loss" },
+          ].map(({ label, criteria, tooltip }) => (
+            <div key={criteria} className={styles.tooltipWrapper}>
+              <button
+                className={`${styles.sortButton} ${
+                  sortCriteria === criteria ? styles.activeSort : ""
+                }`}
+                onClick={() => setSortCriteria(criteria)}
+              >
+                {label}
+              </button>
+              <span className={styles.tooltip}>{tooltip}</span>
+            </div>
+          ))}
         </div>
+
         <input
           type="text"
           placeholder="Search cryptos..."
@@ -119,6 +54,7 @@ export default function CryptoMenu({
           onChange={(e) => setSearchQuery(e.target.value)}
           className={styles.searchInput}
         />
+
         <label className={styles.checkboxLabel}>
           <input
             type="checkbox"
@@ -127,25 +63,45 @@ export default function CryptoMenu({
           />
           <span>Only Selected</span>
         </label>
+        <div className={styles.tooltipWrapper}>
+          <div className={styles.sliderContainer}>
+            <input
+              type="range"
+              min="1"
+              max={supportedCryptos.length}
+              value={maxCoins}
+              onChange={(e) => setMaxCoins(Number(e.target.value))}
+              className={styles.slider}
+            />
+            <label>{maxCoins}</label>
+            <span className={styles.tooltip}>Max coins shown</span>
+          </div>
+        </div>
       </div>
+
       <div className={styles.cryptoMenu}>
-        {sortedCryptos.map((crypto) => {
-          const data = marketData[crypto.symbol];
+        {sortedCryptos.slice(0, maxCoins).map((crypto) => {
+          const data = marketData[crypto.symbol] || {};
           let statValue = "";
+
           if (
             sortCriteria === "price" ||
             (sortCriteria === "alphabetical" && data)
           ) {
-            statValue = `$${parseFloat(data.price).toFixed(2)}`;
+            statValue = `$${parseFloat(data.price || 0).toFixed(2)}`;
           } else if (
             (sortCriteria === "gain" || sortCriteria === "loss") &&
             data
           ) {
-            const pct = parseFloat(data.priceChangePercent).toFixed(2) + "%";
-            statValue = pct;
+            statValue = `${parseFloat(data.priceChangePercent || 0).toFixed(
+              2
+            )}%`;
           } else if (sortCriteria === "marketCap" && data) {
-            statValue = `$${formatter.format(parseFloat(crypto.supply * data.price))}`;
+            statValue = `$${formatter.format(
+              parseFloat((crypto.supply || 0) * (data.price || 0))
+            )}`;
           }
+
           const isNegative =
             (sortCriteria === "gain" || sortCriteria === "loss") &&
             data &&
@@ -155,7 +111,7 @@ export default function CryptoMenu({
             <div
               key={crypto.symbol}
               className={`${styles.menuItem} ${
-                selectedCryptos.find((el) => el.symbol == crypto.symbol)
+                selectedCryptos.some((el) => el.symbol === crypto.symbol)
                   ? styles.selected
                   : ""
               }`}

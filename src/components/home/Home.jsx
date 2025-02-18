@@ -6,7 +6,7 @@ import { useCryptoState } from "../../hooks/useCryptoState";
 import { Menu } from "lucide-react";
 import PortfolioSwitcher from "../PortfolioSwitcher/PortfolioSwitcher";
 
-localStorage.clear();
+//localStorage.clear();
 
 function Home() {
   const {

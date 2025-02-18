@@ -1,5 +1,3 @@
-import { supportedCryptos } from "../supportedCryptos";
-
 export async function fetchMarketData(cryptos, setMarketData) {
   if (Array.isArray(cryptos)) {
     const promises = cryptos.map((crypto) =>
