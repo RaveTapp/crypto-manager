@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import styles from "./CryptoMenu.module.css";
 import { supportedCryptos } from "../../supportedCryptos";
 
+const formatter = Intl.NumberFormat('en', { notation: 'compact' });
+
 export default function CryptoMenu({
   marketData,
   selectedCryptos,
@@ -40,8 +42,8 @@ export default function CryptoMenu({
         );
       case "marketCap":
         return (
-          parseFloat(dataB.quoteVolume || 0) -
-          parseFloat(dataA.quoteVolume || 0)
+          parseFloat(b.supply * dataB.price || 0) -
+          parseFloat(a.supply * dataA.price || 0)
         );
       case "alphabetical":
         return a.name.localeCompare(b.name);
@@ -85,7 +87,7 @@ export default function CryptoMenu({
             >
               M
             </button>
-            <span className={styles.tooltip}>Market Cap</span>
+            <span className={styles.tooltip}>FDV Market Cap</span>
           </div>
           <div className={styles.tooltipWrapper}>
             <button
@@ -141,9 +143,9 @@ export default function CryptoMenu({
           ) {
             const pct = parseFloat(data.priceChangePercent).toFixed(2) + "%";
             statValue = pct;
-          } //  else if (sortCriteria === "marketCap" && data) {
-          //   statValue = `$${parseFloat(data.quoteVolume).toFixed(2)}`;
-          // }
+          } else if (sortCriteria === "marketCap" && data) {
+            statValue = `$${formatter.format(parseFloat(crypto.supply * data.price))}`;
+          }
           const isNegative =
             (sortCriteria === "gain" || sortCriteria === "loss") &&
             data &&
