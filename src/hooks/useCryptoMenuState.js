@@ -65,8 +65,8 @@ export function useCryptoMenuState(
           );
         case "marketCap":
           return (
-            parseFloat(dataB.price || 0) * (a.supply || 0) -
-            parseFloat(dataA.price || 0) * (b.supply || 0)
+            parseFloat(dataB.price || 0) * (b.supply || 0) -
+            parseFloat(dataA.price || 0) * (a.supply || 0)
           );
         case "alphabetical":
           return a.name.localeCompare(b.name);

@@ -36,7 +36,7 @@ function PortfolioSwitcher({
         <button className={styles.iconButton} onClick={() => setRenaming(!renaming)}>
           <Edit size={24} />
         </button>
-        <button className={styles.iconButton} onClick={addPortfolio}>
+        <button className={styles.iconButton} onClick={() => addPortfolio(false)}>
           <Plus size={24} />
         </button>
       </div>

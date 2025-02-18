@@ -111,26 +111,39 @@ export function useCryptoState() {
     );
   };
 
-  const addPortfolio = () => {
+  const addPortfolio = (afterRemove) => {
     const newId =
       portfolios.length > 0 ? Math.max(...portfolios.map((p) => p.id)) + 1 : 1;
     const newPortfolio = {
       id: newId,
       name: "New Portfolio",
       selectedCryptos: [
-        { symbol: "BTCUSDC", acronym: "BTC", name: "Bitcoin", logo: "" },
+        {
+          symbol: "BTCUSDC",
+          acronym: "BTC",
+          name: "Bitcoin",
+          supply: 21_000_000,
+          logo: "",
+        },
       ],
       holdings: Object.fromEntries(supportedCryptos.map((c) => [c.symbol, ""])),
     };
-    setPortfolios([...portfolios, newPortfolio]);
+    afterRemove
+      ? setPortfolios([newPortfolio])
+      : setPortfolios([...portfolios, newPortfolio]);
     setCurrentPortfolioId(newId);
   };
 
   const removePortfolio = (id) => {
     if (window.confirm("Are you sure you want to remove this portfolio?")) {
-      setPortfolios((prev) => prev.filter((p) => p.id !== id));
-      if (id === currentPortfolioId && portfolios.length > 1) {
-        setCurrentPortfolioId(portfolios[0].id);
+      var newPortfolios = portfolios.filter((p) => p.id !== id);
+      setPortfolios(newPortfolios);
+      if (id === currentPortfolioId) {
+        if (newPortfolios.length >= 1) {
+          setCurrentPortfolioId(newPortfolios[0].id);
+        } else {
+          addPortfolio(true);
+        }
       }
     }
   };
