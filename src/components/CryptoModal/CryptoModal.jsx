@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import styles from "./CryptoModal.module.css";
-import { Edit, Plus, Save } from "lucide-react";
+import { Edit, Plus, Save, Trash } from "lucide-react";
 import { saveToStorage } from "../../utils/localStorageUtils";
 
 export default function CryptoModal({
@@ -13,7 +13,7 @@ export default function CryptoModal({
   const [editMode, setEditMode] = useState(false);
   const [history, setHistory] = useState(() => {
     const today = new Date().toISOString().slice(0, 10);
-    if(currentHolding) return currentHolding;
+    if (currentHolding) return currentHolding;
     return [
       {
         date: today,
@@ -22,6 +22,7 @@ export default function CryptoModal({
       },
     ];
   });
+  const [firstRemoveConfirmed, setFirstRemoveConfirmed] = useState(false);
 
   const tableRef = useRef(null);
 
@@ -32,6 +33,15 @@ export default function CryptoModal({
     setHistory([...history, { date: today, price: "", quantity: "" }]);
   };
 
+  const removeRow = (rowIndex) => {
+    if (!firstRemoveConfirmed) {
+      const confirmDelete = window.confirm("Are you sure you want to remove this entry?");
+      if (!confirmDelete) return;
+      setFirstRemoveConfirmed(true);
+    }
+    setHistory((prev) => prev.filter((_, i) => i !== rowIndex));
+  };
+
   const updateRow = (rowIndex, field, value) => {
     setHistory((prev) =>
       prev.map((row, i) => (i === rowIndex ? { ...row, [field]: value } : row))
@@ -40,6 +50,7 @@ export default function CryptoModal({
 
   const handleSave = () => {
     setEditMode(false);
+    setFirstRemoveConfirmed(false);
     handleHoldingsChange(crypto.symbol, history);
   };
 
@@ -57,8 +68,8 @@ export default function CryptoModal({
       let newCol = colIndex;
       if (key === "ArrowRight" || (key === "Tab" && !e.shiftKey)) newCol++;
       if (key === "ArrowLeft" || (key === "Tab" && e.shiftKey)) newCol--;
-      if (key === "ArrowDown" ) newRow++;
-      if (key === "ArrowUp" ) newRow--;
+      if (key === "ArrowDown") newRow++;
+      if (key === "ArrowUp") newRow--;
       const selector = `[data-row='${newRow}'][data-col='${newCol}']`;
       const next = document.querySelector(selector);
       if (next) next.focus();
@@ -79,9 +90,7 @@ export default function CryptoModal({
   return (
     <div className={styles.overlay} onClick={handleOverlayClick}>
       <div className={styles.modal} onClick={handleContentClick}>
-        <button className={styles.closeButton} onClick={closeModal}>
-          X
-        </button>
+        <button className={styles.closeButton} onClick={closeModal}>X</button>
         <div className={styles.modalHeader}>
           <h2>{crypto.name} Purchase History</h2>
           <div className={styles.modalActions}>
@@ -103,6 +112,7 @@ export default function CryptoModal({
                 <th>Price</th>
                 <th>Quantity</th>
                 <th>Total</th>
+                {editMode && <th>Actions</th>}
               </tr>
             </thead>
             <tbody>
@@ -118,9 +128,7 @@ export default function CryptoModal({
                           value={row.date}
                           data-row={rowIndex}
                           data-col={0}
-                          onChange={(e) =>
-                            updateRow(rowIndex, "date", e.target.value)
-                          }
+                          onChange={(e) => updateRow(rowIndex, "date", e.target.value)}
                           onKeyDown={(e) => handleKeyDown(e, rowIndex, 0)}
                         />
                       ) : (
@@ -135,9 +143,7 @@ export default function CryptoModal({
                           data-row={rowIndex}
                           data-col={1}
                           step="0.01"
-                          onChange={(e) =>
-                            updateRow(rowIndex, "price", e.target.value)
-                          }
+                          onChange={(e) => updateRow(rowIndex, "price", e.target.value)}
                           onKeyDown={(e) => handleKeyDown(e, rowIndex, 1)}
                         />
                       ) : (
@@ -148,13 +154,11 @@ export default function CryptoModal({
                       {editMode ? (
                         <input
                           type="number"
-                          value={row.quantity ? parseFloat(row.quantity): ""}
+                          value={row.quantity ? parseFloat(row.quantity) : ""}
                           data-row={rowIndex}
                           data-col={2}
                           step="0.01"
-                          onChange={(e) =>
-                            updateRow(rowIndex, "quantity", e.target.value)
-                          }
+                          onChange={(e) => updateRow(rowIndex, "quantity", e.target.value)}
                           onKeyDown={(e) => handleKeyDown(e, rowIndex, 2)}
                         />
                       ) : (
@@ -164,6 +168,13 @@ export default function CryptoModal({
                     <td data-row={rowIndex} data-col={3}>
                       {total ? total.toFixed(2) : "0.00"}
                     </td>
+                    {editMode && (
+                      <td>
+                        <button className={styles.iconButton} onClick={() => removeRow(rowIndex)}>
+                          <Trash size={20} />
+                        </button>
+                      </td>
+                    )}
                   </tr>
                 );
               })}
