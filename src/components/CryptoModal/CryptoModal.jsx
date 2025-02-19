@@ -1,31 +1,66 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import styles from "./CryptoModal.module.css";
 import { Edit, Plus, Save } from "lucide-react";
 
-export default function CryptoModal({ crypto, closeModal }) {
+export default function CryptoModal({
+  crypto,
+  currentHolding,
+  marketData,
+  closeModal,
+}) {
   const [editMode, setEditMode] = useState(false);
-  const [history, setHistory] = useState([]);
+  const [history, setHistory] = useState(() => {
+    const today = new Date().toISOString().slice(0, 10);
+    return [
+      {
+        date: today,
+        price: marketData[crypto.symbol]?.price || "",
+        quantity: currentHolding || "",
+      },
+    ];
+  });
 
-  const toggleEditMode = () => {
-    setEditMode((prev) => !prev);
-  };
+  const tableRef = useRef(null);
+
+  const toggleEditMode = () => setEditMode((prev) => !prev);
 
   const addRow = () => {
-    setHistory([...history, { date: "", price: "", quantity: "" }]);
+    const today = new Date().toISOString().slice(0, 10);
+    setHistory([...history, { date: today, price: "", quantity: "" }]);
   };
 
-  const updateRow = (index, field, value) => {
-    setHistory(
-      history.map((entry, i) =>
-        i === index ? { ...entry, [field]: value } : entry
-      )
+  const updateRow = (rowIndex, field, value) => {
+    setHistory((prev) =>
+      prev.map((row, i) => (i === rowIndex ? { ...row, [field]: value } : row))
     );
   };
 
   const handleSave = () => {
     setEditMode(false);
-    // Optionally, persist history here.
+    // Optionally, persist history changes here.
   };
+
+  const handleKeyDown = useCallback((e, rowIndex, colIndex) => {
+    const key = e.key;
+    if (
+      key === "ArrowRight" ||
+      key === "ArrowLeft" ||
+      key === "ArrowUp" ||
+      key === "ArrowDown" ||
+      key === "Tab"
+    ) {
+      e.preventDefault();
+      let newRow = rowIndex;
+      let newCol = colIndex;
+      if (key === "ArrowRight") newCol++;
+      if (key === "ArrowLeft") newCol--;
+      if (key === "ArrowDown" || (key === "Tab" && !e.shiftKey)) newRow++;
+      if (key === "ArrowUp" || (key === "Tab" && e.shiftKey)) newRow--;
+      const selector = `[data-row='${newRow}'][data-col='${newCol}']`;
+      const next = document.querySelector(selector);
+      if (next) next.focus();
+    }
+  }, []);
 
   useEffect(() => {
     const handleEsc = (e) => {
@@ -58,60 +93,77 @@ export default function CryptoModal({ crypto, closeModal }) {
           </div>
         </div>
         <div className={styles.modalContent}>
-          <table className={styles.historyTable}>
+          <table ref={tableRef} className={styles.historyTable}>
             <thead>
               <tr>
                 <th>Date</th>
                 <th>Price</th>
                 <th>Quantity</th>
+                <th>Total</th>
               </tr>
             </thead>
             <tbody>
-              {history.map((entry, index) => (
-                <tr key={index}>
-                  <td>
-                    {editMode ? (
-                      <input
-                        type="date"
-                        value={entry.date}
-                        onChange={(e) =>
-                          updateRow(index, "date", e.target.value)
-                        }
-                      />
-                    ) : (
-                      entry.date
-                    )}
-                  </td>
-                  <td>
-                    {editMode ? (
-                      <input
-                        type="number"
-                        value={entry.price}
-                        onChange={(e) =>
-                          updateRow(index, "price", e.target.value)
-                        }
-                        step="0.01"
-                      />
-                    ) : (
-                      entry.price
-                    )}
-                  </td>
-                  <td>
-                    {editMode ? (
-                      <input
-                        type="number"
-                        value={entry.quantity}
-                        onChange={(e) =>
-                          updateRow(index, "quantity", e.target.value)
-                        }
-                        step="0.01"
-                      />
-                    ) : (
-                      entry.quantity
-                    )}
-                  </td>
-                </tr>
-              ))}
+              {history.map((row, rowIndex) => {
+                const total =
+                  parseFloat(row.price || 0) * parseFloat(row.quantity || 0);
+                return (
+                  <tr key={rowIndex}>
+                    <td>
+                      {editMode ? (
+                        <input
+                          type="date"
+                          value={row.date}
+                          data-row={rowIndex}
+                          data-col={0}
+                          onChange={(e) =>
+                            updateRow(rowIndex, "date", e.target.value)
+                          }
+                          onKeyDown={(e) => handleKeyDown(e, rowIndex, 0)}
+                        />
+                      ) : (
+                        row.date
+                      )}
+                    </td>
+                    <td>
+                      {editMode ? (
+                        <input
+                          type="number"
+                          value={row.price}
+                          data-row={rowIndex}
+                          data-col={1}
+                          step="0.01"
+                          onChange={(e) =>
+                            updateRow(rowIndex, "price", e.target.value)
+                          }
+                          onKeyDown={(e) => handleKeyDown(e, rowIndex, 1)}
+                        />
+                      ) : (
+                        row.price
+                      )}
+                    </td>
+                    <td>
+                      {editMode ? (
+                        <input
+                          type="number"
+                          value={row.quantity}
+                          data-row={rowIndex}
+                          data-col={2}
+                          step="0.01"
+                          onChange={(e) =>
+                            updateRow(rowIndex, "quantity", e.target.value)
+                          }
+                          onKeyDown={(e) => handleKeyDown(e, rowIndex, 2)}
+                        />
+                      ) : (
+                        row.quantity
+                      )}
+                    </td>
+                    <td data-row={rowIndex} data-col={3}>
+                      {total ? total.toFixed(2) : "0.00"}
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
           {editMode && (

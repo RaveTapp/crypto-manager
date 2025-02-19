@@ -25,7 +25,6 @@ export default function PriceList({
         {selectedCryptos.map((crypto) => {
           const amount = holdings[crypto.symbol] || 0;
           const value = calculatedValues[crypto.symbol] || 0;
-
           return (
             <li
               key={crypto.symbol}
@@ -83,7 +82,12 @@ export default function PriceList({
         })}
       </ul>
       {popupCrypto && (
-        <CryptoModal crypto={popupCrypto} closeModal={closeModal} />
+        <CryptoModal
+          crypto={popupCrypto}
+          currentHolding={holdings[popupCrypto.symbol]}
+          marketData={marketData}
+          closeModal={closeModal}
+        />
       )}
     </div>
   );
