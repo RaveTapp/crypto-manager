@@ -1,10 +1,12 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import styles from "./CryptoModal.module.css";
 import { Edit, Plus, Save } from "lucide-react";
+import { saveToStorage } from "../../utils/localStorageUtils";
 
 export default function CryptoModal({
   crypto,
   currentHolding,
+  handleHoldingsChange,
   marketData,
   closeModal,
 }) {
@@ -15,7 +17,7 @@ export default function CryptoModal({
       {
         date: today,
         price: marketData[crypto.symbol]?.price || "",
-        quantity: currentHolding || "",
+        quantity: currentHolding.quantity || "",
       },
     ];
   });
@@ -38,6 +40,7 @@ export default function CryptoModal({
   const handleSave = () => {
     setEditMode(false);
     // Optionally, persist history changes here.
+    handleHoldingsChange(crypto.symbol, history);
   };
 
   const handleKeyDown = useCallback((e, rowIndex, colIndex) => {
@@ -52,10 +55,10 @@ export default function CryptoModal({
       e.preventDefault();
       let newRow = rowIndex;
       let newCol = colIndex;
-      if (key === "ArrowRight") newCol++;
-      if (key === "ArrowLeft") newCol--;
-      if (key === "ArrowDown" || (key === "Tab" && !e.shiftKey)) newRow++;
-      if (key === "ArrowUp" || (key === "Tab" && e.shiftKey)) newRow--;
+      if (key === "ArrowRight" || (key === "Tab" && !e.shiftKey)) newCol++;
+      if (key === "ArrowLeft" || (key === "Tab" && e.shiftKey)) newCol--;
+      if (key === "ArrowDown" ) newRow++;
+      if (key === "ArrowUp" ) newRow--;
       const selector = `[data-row='${newRow}'][data-col='${newCol}']`;
       const next = document.querySelector(selector);
       if (next) next.focus();
@@ -128,7 +131,7 @@ export default function CryptoModal({
                       {editMode ? (
                         <input
                           type="number"
-                          value={row.price}
+                          value={row.price ? parseFloat(row.price) : ""}
                           data-row={rowIndex}
                           data-col={1}
                           step="0.01"
@@ -138,14 +141,14 @@ export default function CryptoModal({
                           onKeyDown={(e) => handleKeyDown(e, rowIndex, 1)}
                         />
                       ) : (
-                        row.price
+                        row.price ? parseFloat(row.price) : ""
                       )}
                     </td>
                     <td>
                       {editMode ? (
                         <input
                           type="number"
-                          value={row.quantity}
+                          value={row.quantity ? parseFloat(row.quantity): ""}
                           data-row={rowIndex}
                           data-col={2}
                           step="0.01"
@@ -168,7 +171,7 @@ export default function CryptoModal({
           </table>
           {editMode && (
             <button className={styles.addRowButton} onClick={addRow}>
-              <Plus size={20} /> Add Row
+              <Plus size={20} />
             </button>
           )}
         </div>

@@ -15,7 +15,16 @@ export function useCryptoState() {
           { symbol: "BTCUSDC", acronym: "BTC", name: "Bitcoin", logo: "" },
         ],
         holdings: Object.fromEntries(
-          supportedCryptos.map((c) => [c.symbol, ""])
+          supportedCryptos.map((c) => [
+            c.symbol,
+            [
+              {
+                date: new Date().toISOString().slice(0, 10),
+                price: "",
+                quantity: "",
+              },
+            ],
+          ])
         ),
       },
     ];
@@ -126,7 +135,18 @@ export function useCryptoState() {
           logo: "",
         },
       ],
-      holdings: Object.fromEntries(supportedCryptos.map((c) => [c.symbol, ""])),
+      holdings: Object.fromEntries(
+        supportedCryptos.map((c) => [
+          c.symbol,
+          [
+            {
+              date: new Date().toISOString().slice(0, 10),
+              price: marketData[crypto.symbol]?.price || "",
+              quantity: "",
+            },
+          ],
+        ])
+      ),
     };
     afterRemove
       ? setPortfolios([newPortfolio])

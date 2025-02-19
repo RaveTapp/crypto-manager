@@ -37,7 +37,7 @@ export default function PriceList({
                   {parseFloat(marketData[crypto.symbol]?.price) || ""}
                 </span>
               </div>
-              <div className={styles.holdingsControl}>
+              {/* <div className={styles.holdingsControl}>
                 <button
                   type="button"
                   onClick={(e) => {
@@ -73,7 +73,7 @@ export default function PriceList({
                 >
                   +
                 </button>
-              </div>
+              </div> */}
               <div className={styles.cryptoValue}>
                 Value: ${value.toFixed(2)}
               </div>
@@ -85,6 +85,7 @@ export default function PriceList({
         <CryptoModal
           crypto={popupCrypto}
           currentHolding={holdings[popupCrypto.symbol]}
+          handleHoldingsChange={handleHoldingsChange}
           marketData={marketData}
           closeModal={closeModal}
         />
