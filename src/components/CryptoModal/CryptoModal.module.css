@@ -19,6 +19,7 @@
   position: relative;
   max-width: 500px;
   width: 90%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
 }
 
 .closeButton {
@@ -32,6 +33,67 @@
   cursor: pointer;
 }
 
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modalActions {
+  display: flex;
+  gap: 8px;
+}
+
+.iconButton {
+  background: none;
+  border: none;
+  color: #e0e0e0;
+  cursor: pointer;
+}
+
+.iconButton:hover {
+  color: #1e88e5;
+}
+
 .modalContent {
-  margin-top: 30px;
+  margin-top: 20px;
+}
+
+.historyTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.historyTable th,
+.historyTable td {
+  padding: 8px;
+  border: 1px solid #444;
+  text-align: center;
+}
+
+.historyTable th {
+  background-color: #1a1a1a;
+}
+
+.historyTable td input {
+  width: 90%;
+  padding: 4px;
+  border: 1px solid #444;
+  border-radius: 4px;
+  background-color: #222;
+  color: #e0e0e0;
+}
+
+.addRowButton {
+  margin-top: 10px;
+  background-color: #1e88e5;
+  border: none;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.addRowButton:hover {
+  background-color: #1565c0;
 }
