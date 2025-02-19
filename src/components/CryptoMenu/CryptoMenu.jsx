@@ -88,14 +88,12 @@ export default function CryptoMenu({
             sortCriteria === "price" ||
             (sortCriteria === "alphabetical" && data)
           ) {
-            statValue = `$${parseFloat(data.price || 0).toFixed(2)}`;
+            statValue = `$${parseFloat(data.price || 0)}`;
           } else if (
             (sortCriteria === "gain" || sortCriteria === "loss") &&
             data
           ) {
-            statValue = `${parseFloat(data.priceChangePercent || 0).toFixed(
-              2
-            )}%`;
+            statValue = `${parseFloat(data.priceChangePercent || 0)}%`;
           } else if (sortCriteria === "marketCap" && data) {
             statValue = `$${formatter.format(
               parseFloat((crypto.supply || 0) * (data.price || 0))

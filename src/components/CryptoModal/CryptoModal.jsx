@@ -13,6 +13,7 @@ export default function CryptoModal({
   const [editMode, setEditMode] = useState(false);
   const [history, setHistory] = useState(() => {
     const today = new Date().toISOString().slice(0, 10);
+    if(currentHolding) return currentHolding;
     return [
       {
         date: today,
@@ -39,7 +40,6 @@ export default function CryptoModal({
 
   const handleSave = () => {
     setEditMode(false);
-    // Optionally, persist history changes here.
     handleHoldingsChange(crypto.symbol, history);
   };
 
