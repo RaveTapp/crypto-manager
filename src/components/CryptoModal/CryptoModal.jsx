@@ -94,6 +94,8 @@ export default function CryptoModal({
   const handleOverlayClick = () => closeModal();
   const handleContentClick = (e) => e.stopPropagation();
 
+  const decimalLength = parseFloat(marketData[crypto.symbol]?.price)?.toString().split('.')[1]?.length;
+
   // Statistics
   const { totalQuantity, totalSpent, averagePrice } = useMemo(() => {
     const totalQuantity = history.reduce(
@@ -132,17 +134,17 @@ export default function CryptoModal({
         <div className={styles.statistics}>
           <div className={styles.tooltipWrapper}>
             <span className={styles.tooltip}>Total quantity</span>
-            <span className={styles.statValue}>{totalQuantity.toFixed(3)}</span>
+            <span className={styles.statValue}>{totalQuantity.toFixed(decimalLength || 3)}</span>
           </div>
 
           <div className={styles.tooltipWrapper}>
             <span className={styles.tooltip}>Total amount</span>
-            <span className={styles.statValue}>${totalSpent.toFixed(3)}</span>
+            <span className={styles.statValue}>${totalSpent.toFixed(decimalLength || 3)}</span>
           </div>
 
           <div className={styles.tooltipWrapper}>
             <span className={styles.tooltip}>Average price</span>
-            <span className={styles.statValue}>${averagePrice.toFixed(3)}</span>
+            <span className={styles.statValue}>${averagePrice.toFixed(decimalLength || 3)}</span>
           </div>
         </div>
         <div className={styles.modalContent}>
@@ -215,7 +217,7 @@ export default function CryptoModal({
                       )}
                     </td>
                     <td data-row={rowIndex} data-col={3}>
-                      {total ? total.toFixed(2) : "0.00"}
+                      {total ? total.toFixed(decimalLength || 3) : "0.00"}
                     </td>
                     {editMode && (
                       <td>
