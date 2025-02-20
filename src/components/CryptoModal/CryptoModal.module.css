@@ -136,28 +136,3 @@
 .tooltipWrapper:hover .tooltip {
   display: block;
 }
-
-.statButton {
-  background: none;
-  border: none;
-  padding: 4px 8px;
-  font-size: 14px;
-  color: #333;
-  cursor: pointer;
-}
-
-.statistics {
-  margin-bottom: 8px;
-  width: 100%;
-  display: flex;
-  justify-content: space-evenly;
-}
-
-.statValue {
-  display: block;
-  font-weight: bold;
-  font-size: 16px;
-  padding: 8px;
-  border: #444 1px solid;
-  color: #00ff99;
-}

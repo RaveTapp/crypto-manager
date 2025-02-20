@@ -1,12 +1,7 @@
-import React, {
-  useEffect,
-  useState,
-  useRef,
-  useCallback,
-  useMemo,
-} from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import styles from "./CryptoModal.module.css";
 import { Edit, Plus, Save, Trash } from "lucide-react";
+import CryptoStat from "./CryptoStat.jsx/CryptoStat";
 
 export default function CryptoModal({
   crypto,
@@ -94,22 +89,9 @@ export default function CryptoModal({
   const handleOverlayClick = () => closeModal();
   const handleContentClick = (e) => e.stopPropagation();
 
-  const decimalLength = parseFloat(marketData[crypto.symbol]?.price)?.toString().split('.')[1]?.length;
-
-  // Statistics
-  const { totalQuantity, totalSpent, averagePrice } = useMemo(() => {
-    const totalQuantity = history.reduce(
-      (sum, row) => sum + (parseFloat(row.quantity) || 0),
-      0
-    );
-    const totalSpent = history.reduce(
-      (sum, row) =>
-        sum + (parseFloat(row.price) || 0) * (parseFloat(row.quantity) || 0),
-      0
-    );
-    const averagePrice = totalQuantity ? totalSpent / totalQuantity : 0;
-    return { totalQuantity, totalSpent, averagePrice };
-  }, [history]);
+  const decimalLength = parseFloat(marketData[crypto.symbol]?.price)
+    ?.toString()
+    .split(".")[1]?.length;
 
   return (
     <div className={styles.overlay} onClick={handleOverlayClick}>
@@ -131,22 +113,8 @@ export default function CryptoModal({
           </div>
         </div>
 
-        <div className={styles.statistics}>
-          <div className={styles.tooltipWrapper}>
-            <span className={styles.tooltip}>Total quantity</span>
-            <span className={styles.statValue}>{totalQuantity.toFixed(decimalLength || 3)}</span>
-          </div>
+        <CryptoStat history={history} decimalLength={decimalLength} />
 
-          <div className={styles.tooltipWrapper}>
-            <span className={styles.tooltip}>Total amount</span>
-            <span className={styles.statValue}>${totalSpent.toFixed(decimalLength || 3)}</span>
-          </div>
-
-          <div className={styles.tooltipWrapper}>
-            <span className={styles.tooltip}>Average price</span>
-            <span className={styles.statValue}>${averagePrice.toFixed(decimalLength || 3)}</span>
-          </div>
-        </div>
         <div className={styles.modalContent}>
           <table ref={tableRef} className={styles.historyTable}>
             <thead>

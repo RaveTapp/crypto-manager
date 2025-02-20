@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styles from "./PriceList.module.css";
 import CryptoModal from "../CryptoModal/CryptoModal";
+import CryptoStat from "../CryptoModal/CryptoStat.jsx/CryptoStat";
 
 export default function PriceList({
   marketData,
@@ -25,6 +26,9 @@ export default function PriceList({
         {selectedCryptos.map((crypto) => {
           const amount = holdings[crypto.symbol] || 0;
           const value = calculatedValues[crypto.symbol] || 0;
+          const decimalLength = parseFloat(marketData[crypto.symbol]?.price)
+            ?.toString()
+            .split(".")[1]?.length;
           return (
             <li
               key={crypto.symbol}
@@ -37,43 +41,11 @@ export default function PriceList({
                   {parseFloat(marketData[crypto.symbol]?.price) || ""}
                 </span>
               </div>
-              {/* <div className={styles.holdingsControl}>
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleHoldingsChange(
-                      crypto.symbol,
-                      Math.max(0, parseFloat(amount) - 1)
-                    );
-                  }}
-                  className={styles.adjustButton}
-                  disabled={amount <= 0}
-                >
-                  -
-                </button>
-                <input
-                  type="number"
-                  value={amount}
-                  onClick={(e) => e.stopPropagation()}
-                  onChange={(e) => {
-                    e.stopPropagation();
-                    handleHoldingsChange(crypto.symbol, e.target.value);
-                  }}
-                  className={styles.holdingsInput}
-                  min="0"
-                />
-                <button
-                  type="button"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleHoldingsChange(crypto.symbol, parseFloat(amount) + 1);
-                  }}
-                  className={styles.adjustButton}
-                >
-                  +
-                </button>
-              </div> */}
+
+              <CryptoStat
+                history={holdings[crypto.symbol]}
+                decimalLength={decimalLength}
+              />
               <div className={styles.cryptoValue}>
                 Value: ${value.toFixed(2)}
               </div>
