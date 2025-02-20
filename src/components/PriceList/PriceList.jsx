@@ -24,11 +24,16 @@ export default function PriceList({
     <div>
       <ul className={styles.priceList}>
         {selectedCryptos.map((crypto) => {
-          const amount = holdings[crypto.symbol] || 0;
-          const value = calculatedValues[crypto.symbol] || 0;
+          
           const decimalLength = parseFloat(marketData[crypto.symbol]?.price)
             ?.toString()
             .split(".")[1]?.length;
+            const totalSpent = holdings[crypto.symbol].reduce(
+              (sum, row) =>
+                sum + (parseFloat(row.price) || 0) * (parseFloat(row.quantity) || 0),
+              0
+            );
+            const value = calculatedValues[crypto.symbol] || 0;
           return (
             <li
               key={crypto.symbol}
@@ -47,7 +52,7 @@ export default function PriceList({
                 decimalLength={decimalLength}
               />
               <div className={styles.cryptoValue}>
-                Value: ${value.toFixed(2)}
+                Profit/Loss: ${value.toFixed(decimalLength)}
               </div>
             </li>
           );

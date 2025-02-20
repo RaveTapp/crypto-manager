@@ -83,7 +83,7 @@ export function useCryptoState() {
     let sum = 0;
     const newCalculatedValues = selectedCryptos.reduce((acc, crypto) => {
       const symbol = crypto.symbol;
-      const amount = parseFloat(holdings[symbol]) || 0;
+      const amount = parseFloat(holdings[symbol]?.quantity) || 0; //need totalQuantity for each crypto
       const price = marketData[symbol]?.price || 0;
       acc[symbol] = amount * price;
       sum += amount * price;
