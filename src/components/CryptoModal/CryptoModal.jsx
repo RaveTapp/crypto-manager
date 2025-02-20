@@ -1,7 +1,12 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, {
+  useEffect,
+  useState,
+  useRef,
+  useCallback,
+  useMemo,
+} from "react";
 import styles from "./CryptoModal.module.css";
 import { Edit, Plus, Save, Trash } from "lucide-react";
-import { saveToStorage } from "../../utils/localStorageUtils";
 
 export default function CryptoModal({
   crypto,
@@ -35,7 +40,9 @@ export default function CryptoModal({
 
   const removeRow = (rowIndex) => {
     if (!firstRemoveConfirmed) {
-      const confirmDelete = window.confirm("Are you sure you want to remove this entry?");
+      const confirmDelete = window.confirm(
+        "Are you sure you want to remove this entry?"
+      );
       if (!confirmDelete) return;
       setFirstRemoveConfirmed(true);
     }
@@ -87,10 +94,27 @@ export default function CryptoModal({
   const handleOverlayClick = () => closeModal();
   const handleContentClick = (e) => e.stopPropagation();
 
+  // Statistics
+  const { totalQuantity, totalSpent, averagePrice } = useMemo(() => {
+    const totalQuantity = history.reduce(
+      (sum, row) => sum + (parseFloat(row.quantity) || 0),
+      0
+    );
+    const totalSpent = history.reduce(
+      (sum, row) =>
+        sum + (parseFloat(row.price) || 0) * (parseFloat(row.quantity) || 0),
+      0
+    );
+    const averagePrice = totalQuantity ? totalSpent / totalQuantity : 0;
+    return { totalQuantity, totalSpent, averagePrice };
+  }, [history]);
+
   return (
     <div className={styles.overlay} onClick={handleOverlayClick}>
       <div className={styles.modal} onClick={handleContentClick}>
-        <button className={styles.closeButton} onClick={closeModal}>X</button>
+        <button className={styles.closeButton} onClick={closeModal}>
+          X
+        </button>
         <div className={styles.modalHeader}>
           <h2>{crypto.name} Purchase History</h2>
           <div className={styles.modalActions}>
@@ -102,6 +126,23 @@ export default function CryptoModal({
                 <Save size={20} />
               </button>
             )}
+          </div>
+        </div>
+
+        <div className={styles.statistics}>
+          <div className={styles.tooltipWrapper}>
+            <span className={styles.tooltip}>Total quantity</span>
+            <span className={styles.statValue}>{totalQuantity.toFixed(3)}</span>
+          </div>
+
+          <div className={styles.tooltipWrapper}>
+            <span className={styles.tooltip}>Total amount</span>
+            <span className={styles.statValue}>${totalSpent.toFixed(3)}</span>
+          </div>
+
+          <div className={styles.tooltipWrapper}>
+            <span className={styles.tooltip}>Average price</span>
+            <span className={styles.statValue}>${averagePrice.toFixed(3)}</span>
           </div>
         </div>
         <div className={styles.modalContent}>
@@ -128,7 +169,9 @@ export default function CryptoModal({
                           value={row.date}
                           data-row={rowIndex}
                           data-col={0}
-                          onChange={(e) => updateRow(rowIndex, "date", e.target.value)}
+                          onChange={(e) =>
+                            updateRow(rowIndex, "date", e.target.value)
+                          }
                           onKeyDown={(e) => handleKeyDown(e, rowIndex, 0)}
                         />
                       ) : (
@@ -143,11 +186,15 @@ export default function CryptoModal({
                           data-row={rowIndex}
                           data-col={1}
                           step="0.01"
-                          onChange={(e) => updateRow(rowIndex, "price", e.target.value)}
+                          onChange={(e) =>
+                            updateRow(rowIndex, "price", e.target.value)
+                          }
                           onKeyDown={(e) => handleKeyDown(e, rowIndex, 1)}
                         />
+                      ) : row.price ? (
+                        parseFloat(row.price)
                       ) : (
-                        row.price ? parseFloat(row.price) : ""
+                        ""
                       )}
                     </td>
                     <td>
@@ -158,7 +205,9 @@ export default function CryptoModal({
                           data-row={rowIndex}
                           data-col={2}
                           step="0.01"
-                          onChange={(e) => updateRow(rowIndex, "quantity", e.target.value)}
+                          onChange={(e) =>
+                            updateRow(rowIndex, "quantity", e.target.value)
+                          }
                           onKeyDown={(e) => handleKeyDown(e, rowIndex, 2)}
                         />
                       ) : (
@@ -170,7 +219,10 @@ export default function CryptoModal({
                     </td>
                     {editMode && (
                       <td>
-                        <button className={styles.iconButton} onClick={() => removeRow(rowIndex)}>
+                        <button
+                          className={styles.iconButton}
+                          onClick={() => removeRow(rowIndex)}
+                        >
                           <Trash size={20} />
                         </button>
                       </td>
