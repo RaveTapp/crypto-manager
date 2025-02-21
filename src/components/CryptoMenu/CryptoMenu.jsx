@@ -2,14 +2,13 @@ import React from "react";
 import styles from "./CryptoMenu.module.css";
 import { supportedCryptos } from "../../supportedCryptos";
 import { useCryptoMenuState } from "../../hooks/useCryptoMenuState";
+import { useCryptoState } from "../../hooks/useCryptoState";
 
 const formatter = Intl.NumberFormat("en", { notation: "compact" });
 
-export default function CryptoMenu({
-  marketData,
-  selectedCryptos,
-  toggleSelection,
-}) {
+export default function CryptoMenu() {
+  const { marketData, selectedCryptos, toggleSelection } = useCryptoState();
+
   const {
     searchQuery,
     setSearchQuery,
@@ -63,6 +62,7 @@ export default function CryptoMenu({
           />
           <span>Only Selected</span>
         </label>
+
         <div className={styles.tooltipWrapper}>
           <div className={styles.sliderContainer}>
             <input

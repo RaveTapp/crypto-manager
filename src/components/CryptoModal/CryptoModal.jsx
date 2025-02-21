@@ -2,14 +2,12 @@ import React, { useEffect, useState, useRef, useCallback } from "react";
 import styles from "./CryptoModal.module.css";
 import { Edit, Plus, Save, Trash } from "lucide-react";
 import CryptoStat from "./CryptoStat.jsx/CryptoStat";
+import { useCryptoState } from "../../hooks/useCryptoState";
 
-export default function CryptoModal({
-  crypto,
-  currentHolding,
-  handleHoldingsChange,
-  marketData,
-  closeModal,
-}) {
+export default function CryptoModal({ crypto, closeModal }) {
+  const { holdings, handleHoldingsChange, marketData } = useCryptoState();
+  const currentHolding = holdings[crypto.symbol];
+
   const [editMode, setEditMode] = useState(false);
   const [history, setHistory] = useState(() => {
     const today = new Date().toISOString().slice(0, 10);
@@ -18,7 +16,7 @@ export default function CryptoModal({
       {
         date: today,
         price: marketData[crypto.symbol]?.price || "",
-        quantity: currentHolding.quantity || "",
+        quantity: "",
       },
     ];
   });

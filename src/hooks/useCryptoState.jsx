@@ -1,9 +1,17 @@
-import { useState, useEffect, useRef } from "react";
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  createContext,
+  useContext,
+} from "react";
 import { getFromStorage, saveToStorage } from "../utils/localStorageUtils";
 import { fetchMarketData } from "../services/cryptoService";
 import { supportedCryptos } from "../supportedCryptos";
 
-export function useCryptoState() {
+const CryptoContext = createContext();
+
+function useCryptoStateInternal() {
   const [portfolios, setPortfolios] = useState(() => {
     const saved = getFromStorage("portfolios", null);
     if (saved) return saved;
@@ -83,7 +91,7 @@ export function useCryptoState() {
     let sum = 0;
     const newCalculatedValues = selectedCryptos.reduce((acc, crypto) => {
       const symbol = crypto.symbol;
-      const amount = parseFloat(holdings[symbol]?.quantity) || 0; //need totalQuantity for each crypto
+      const amount = parseFloat(holdings[symbol]?.quantity) || 0;
       const price = marketData[symbol]?.price || 0;
       acc[symbol] = amount * price;
       sum += amount * price;
@@ -141,7 +149,7 @@ export function useCryptoState() {
           [
             {
               date: new Date().toISOString().slice(0, 10),
-              price: marketData[crypto.symbol]?.price || "",
+              price: marketData[c.symbol]?.price || "",
               quantity: "",
             },
           ],
@@ -156,7 +164,7 @@ export function useCryptoState() {
 
   const removePortfolio = (id) => {
     if (window.confirm("Are you sure you want to remove this portfolio?")) {
-      var newPortfolios = portfolios.filter((p) => p.id !== id);
+      const newPortfolios = portfolios.filter((p) => p.id !== id);
       setPortfolios(newPortfolios);
       if (id === currentPortfolioId) {
         if (newPortfolios.length >= 1) {
@@ -185,4 +193,17 @@ export function useCryptoState() {
     addPortfolio,
     removePortfolio,
   };
+}
+
+export function CryptoProvider({ children }) {
+  const cryptoState = useCryptoStateInternal();
+  return (
+    <CryptoContext.Provider value={cryptoState}>
+      {children}
+    </CryptoContext.Provider>
+  );
+}
+
+export function useCryptoState() {
+  return useContext(CryptoContext);
 }

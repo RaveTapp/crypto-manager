@@ -1,7 +1,9 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, createContext, useContext } from "react";
 import { getFromStorage, saveToStorage } from "../utils/localStorageUtils";
 
-export function useCryptoMenuState(
+const CryptoMenuContext = createContext();
+
+function useCryptoMenuStateInternal(
   supportedCryptos,
   marketData,
   selectedCryptos
@@ -95,4 +97,26 @@ export function useCryptoMenuState(
     setMaxCoins,
     sortedCryptos,
   };
+}
+
+export function CryptoMenuProvider({
+  children,
+  supportedCryptos,
+  marketData,
+  selectedCryptos,
+}) {
+  const state = useCryptoMenuStateInternal(
+    supportedCryptos,
+    marketData,
+    selectedCryptos
+  );
+  return (
+    <CryptoMenuContext.Provider value={state}>
+      {children}
+    </CryptoMenuContext.Provider>
+  );
+}
+
+export function useCryptoMenuState() {
+  return useContext(CryptoMenuContext);
 }

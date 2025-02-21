@@ -12,19 +12,13 @@ function Home() {
   const {
     cryptoMenuOpen,
     setCryptoMenuOpen,
-    selectedCryptos,
-    toggleSelection,
-    holdings,
-    handleHoldingsChange,
-    marketData,
-    calculatedValues,
-    totalValue,
     portfolios,
     currentPortfolioId,
     switchPortfolio,
     renameCurrentPortfolio,
     addPortfolio,
     removePortfolio,
+    totalValue,
   } = useCryptoState();
 
   return (
@@ -32,7 +26,7 @@ function Home() {
       <div className={styles.header}>
         <button
           className={styles.menuButton}
-          onClick={() => setCryptoMenuOpen(!cryptoMenuOpen)}
+          onClick={() => setCryptoMenuOpen((prev) => !prev)}
         >
           <Menu size={24} />
         </button>
@@ -48,20 +42,8 @@ function Home() {
       </div>
 
       <div className={styles.content}>
-        {cryptoMenuOpen && (
-          <CryptoMenu
-            marketData={marketData}
-            selectedCryptos={selectedCryptos}
-            toggleSelection={toggleSelection}
-          />
-        )}
-        <PriceList
-          marketData={marketData}
-          selectedCryptos={selectedCryptos}
-          holdings={holdings}
-          handleHoldingsChange={handleHoldingsChange}
-          calculatedValues={calculatedValues}
-        />
+        {cryptoMenuOpen && <CryptoMenu />}
+        <PriceList />
       </div>
     </div>
   );

@@ -2,14 +2,11 @@ import React, { useState } from "react";
 import styles from "./PriceList.module.css";
 import CryptoModal from "../CryptoModal/CryptoModal";
 import CryptoStat from "../CryptoModal/CryptoStat.jsx/CryptoStat";
+import { useCryptoState } from "../../hooks/useCryptoState";
 
-export default function PriceList({
-  marketData,
-  selectedCryptos,
-  holdings,
-  handleHoldingsChange,
-  calculatedValues,
-}) {
+export default function PriceList() {
+  const { marketData, selectedCryptos, holdings, calculatedValues } =
+    useCryptoState();
   const [popupCrypto, setPopupCrypto] = useState(null);
 
   const handleBoxClick = (crypto) => {
@@ -24,16 +21,15 @@ export default function PriceList({
     <div>
       <ul className={styles.priceList}>
         {selectedCryptos.map((crypto) => {
-          
-          const decimalLength = parseFloat(marketData[crypto.symbol]?.price)
-            ?.toString()
-            .split(".")[1]?.length;
-            const totalSpent = holdings[crypto.symbol].reduce(
-              (sum, row) =>
-                sum + (parseFloat(row.price) || 0) * (parseFloat(row.quantity) || 0),
-              0
-            );
-            const value = calculatedValues[crypto.symbol] || 0;
+          const price = parseFloat(marketData[crypto.symbol]?.price) || 0;
+          const decimalLength = price.toString().split(".")[1]?.length || 0;
+          const totalSpent = holdings[crypto.symbol].reduce(
+            (sum, row) =>
+              sum +
+              (parseFloat(row.price) || 0) * (parseFloat(row.quantity) || 0),
+            0
+          );
+          const value = calculatedValues[crypto.symbol] || 0;
           return (
             <li
               key={crypto.symbol}
@@ -42,8 +38,7 @@ export default function PriceList({
             >
               <div className={styles.cryptoInfo}>
                 <span>
-                  {crypto.name} ({crypto.symbol}): $
-                  {parseFloat(marketData[crypto.symbol]?.price) || ""}
+                  {crypto.name} ({crypto.symbol}): ${price || ""}
                 </span>
               </div>
 
@@ -59,13 +54,7 @@ export default function PriceList({
         })}
       </ul>
       {popupCrypto && (
-        <CryptoModal
-          crypto={popupCrypto}
-          currentHolding={holdings[popupCrypto.symbol]}
-          handleHoldingsChange={handleHoldingsChange}
-          marketData={marketData}
-          closeModal={closeModal}
-        />
+        <CryptoModal crypto={popupCrypto} closeModal={closeModal} />
       )}
     </div>
   );

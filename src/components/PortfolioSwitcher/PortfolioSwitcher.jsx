@@ -1,15 +1,18 @@
 import React, { useState } from "react";
 import styles from "./PortfolioSwitcher.module.css";
 import { ChevronDown, Edit, Plus, X } from "lucide-react";
+import { useCryptoState } from "../../hooks/useCryptoState";
 
-function PortfolioSwitcher({
-  portfolios,
-  currentPortfolioId,
-  switchPortfolio,
-  renameCurrentPortfolio,
-  addPortfolio,
-  removePortfolio,
-}) {
+export default function PortfolioSwitcher() {
+  const {
+    portfolios,
+    currentPortfolioId,
+    switchPortfolio,
+    renameCurrentPortfolio,
+    addPortfolio,
+    removePortfolio,
+  } = useCryptoState();
+
   const [showList, setShowList] = useState(false);
   const [renaming, setRenaming] = useState(false);
   const [newName, setNewName] = useState("");
@@ -27,25 +30,44 @@ function PortfolioSwitcher({
   return (
     <div className={styles.portfolioSwitcher}>
       <div className={styles.topRow}>
-        <button className={styles.iconButton} onClick={() => setShowList(!showList)}>
+        <button
+          className={styles.iconButton}
+          onClick={() => setShowList(!showList)}
+        >
           <ChevronDown size={24} />
         </button>
         <span className={styles.currentName}>
           {currentPortfolio ? currentPortfolio.name : "No Portfolio"}
         </span>
-        <button className={styles.iconButton} onClick={() => setRenaming(!renaming)}>
+        <button
+          className={styles.iconButton}
+          onClick={() => setRenaming(!renaming)}
+        >
           <Edit size={24} />
         </button>
-        <button className={styles.iconButton} onClick={() => addPortfolio(false)}>
+        <button
+          className={styles.iconButton}
+          onClick={() => addPortfolio(false)}
+        >
           <Plus size={24} />
         </button>
       </div>
       {showList && (
         <div className={styles.portfolioList}>
           {portfolios.map((p) => (
-            <div key={p.id} className={styles.portfolioItem} onClick={() => switchPortfolio(p.id)}>
-              <span >{p.name}</span>
-              <button className={styles.removeButton} onClick={(event) => {removePortfolio(p.id); event.stopPropagation()}}>
+            <div
+              key={p.id}
+              className={styles.portfolioItem}
+              onClick={() => switchPortfolio(p.id)}
+            >
+              <span>{p.name}</span>
+              <button
+                className={styles.removeButton}
+                onClick={(event) => {
+                  removePortfolio(p.id);
+                  event.stopPropagation();
+                }}
+              >
                 <X size={16} />
               </button>
             </div>
@@ -69,5 +91,3 @@ function PortfolioSwitcher({
     </div>
   );
 }
-
-export default PortfolioSwitcher;
