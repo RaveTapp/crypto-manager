@@ -176,6 +176,7 @@ function useCryptoStateInternal() {
     }
   };
 
+
   return {
     cryptoMenuOpen,
     setCryptoMenuOpen,
