@@ -52,8 +52,15 @@ function useCryptoStateInternal() {
   );
   const [calculatedValues, setCalculatedValues] = useState({});
   const [totalValue, setTotalValue] = useState(0);
-  const [cryptoMenuOpen, setCryptoMenuOpen] = useState(true);
-  const selectedCryptosRef = useRef(selectedCryptos);
+  const [cryptoMenuOpen, setCryptoMenuOpen] = useState(() => {
+    const saved = getFromStorage("cryptoMenuOpen", true);
+    return saved;
+  });
+  useEffect(() => {
+    saveToStorage("cryptoMenuOpen", cryptoMenuOpen);
+  }, [cryptoMenuOpen]);
+  
+  //const selectedCryptosRef = useRef(selectedCryptos);
 
   useEffect(() => {
     saveToStorage("portfolios", portfolios);
