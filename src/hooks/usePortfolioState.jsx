@@ -25,6 +25,12 @@ export function usePortfolioState() {
               ],
             ])
           ),
+          holdingsTotal: Object.fromEntries(
+            supportedCryptos.map((c) => [
+              c.symbol,
+              0
+            ])
+          ),
         },
       ]
     );
@@ -54,13 +60,17 @@ export function usePortfolioState() {
   );
   const [holdings, setHoldings] = useState(currentPortfolio.holdings);
 
+  const [holdingsTotal, setHoldingsTotal] = useState(
+    currentPortfolio.holdingsTotal
+  );
+
   useEffect(() => {
     setPortfolios((prev) =>
       prev.map((p) =>
-        p.id === currentPortfolioId ? { ...p, selectedCryptos, holdings } : p
+        p.id === currentPortfolioId ? { ...p, selectedCryptos, holdings, holdingsTotal } : p
       )
     );
-  }, [selectedCryptos, holdings, currentPortfolioId]);
+  }, [selectedCryptos, holdings, currentPortfolioId, holdingsTotal]);
 
   const addPortfolio = (afterRemove) => {
     const newId =
@@ -81,6 +91,12 @@ export function usePortfolioState() {
               quantity: "",
             },
           ],
+        ])
+      ),
+      holdingsTotal: Object.fromEntries(
+        supportedCryptos.map((c) => [
+          c.symbol,
+          0
         ])
       ),
     };
@@ -121,5 +137,7 @@ export function usePortfolioState() {
     setSelectedCryptos,
     holdings,
     setHoldings,
+    holdingsTotal,
+    setHoldingsTotal,
   };
 }

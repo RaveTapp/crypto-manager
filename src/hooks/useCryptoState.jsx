@@ -24,6 +24,8 @@ function useCryptoStateInternal() {
     setSelectedCryptos,
     holdings,
     setHoldings,
+    holdingsTotal,
+    setHoldingsTotal,
   } = usePortfolioState();
 
   // MARKET DATA
@@ -58,7 +60,7 @@ function useCryptoStateInternal() {
     let sum = 0;
     const newCalculatedValues = selectedCryptos.reduce((acc, crypto) => {
       const symbol = crypto.symbol;
-      const amount = parseFloat(holdingsTotal[symbol]) || 0;
+      const amount = parseFloat(holdingsTotal[symbol] || 0);
       const price = marketData[symbol]?.price || 0;
       acc[symbol] = amount * price;
       sum += amount * price;
@@ -66,7 +68,7 @@ function useCryptoStateInternal() {
     }, {});
     setCalculatedValues(newCalculatedValues);
     setTotalValue(sum);
-  }, [holdings, marketData, selectedCryptos]);
+  }, [holdings, holdingsTotal, marketData, selectedCryptos]);
 
   // OTHER STATE & FUNCTIONS
   const toggleSelection = (symbol) => {
@@ -90,14 +92,6 @@ function useCryptoStateInternal() {
   useEffect(() => {
     saveToStorage("cryptoMenuOpen", cryptoMenuOpen);
   }, [cryptoMenuOpen]);
-
-  const [holdingsTotal, setHoldingsTotal] = useState(() =>
-    getFromStorage("holdingsTotal", {})
-  );
-
-  useEffect(() => {
-    saveToStorage("holdingsTotal", holdingsTotal);
-  }, [holdingsTotal]);
 
   return {
     cryptoMenuOpen,

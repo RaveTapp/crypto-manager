@@ -44,7 +44,7 @@ export default function PriceList() {
               <CryptoStat
                 history={holdings[crypto.symbol]}
                 decimalLength={decimalLength[crypto.symbol] || 2}
-                price={marketData[crypto.symbol].price}
+                price={marketData[crypto.symbol]?.price}
                 symbol={crypto.symbol}
               />
             </li>

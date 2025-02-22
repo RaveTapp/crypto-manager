@@ -37,7 +37,7 @@ export default function CryptoStat({ history, decimalLength, price, symbol }) {
         </div>
 
         <div className={styles.tooltipWrapper}>
-          <span className={styles.tooltip}>Total amount</span>
+          <span className={styles.tooltip}>Total spent</span>
           <span className={styles.statValue}>T: ${totalSpent}</span>
         </div>
 
