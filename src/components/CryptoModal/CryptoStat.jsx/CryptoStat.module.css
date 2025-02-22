@@ -49,3 +49,17 @@
   border: #444 1px solid;
   color: #00e5ff;
 }
+
+.cryptoValue {
+  margin-top: 10px;
+  font-size: 14px;
+  font-weight: bold;
+  color: #00ff99;
+}
+
+.cryptoValueNegative {
+  margin-top: 10px;
+  font-size: 14px;
+  font-weight: bold;
+  color: red;
+}

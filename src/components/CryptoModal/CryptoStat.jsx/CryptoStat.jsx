@@ -1,8 +1,7 @@
 import { useMemo } from "react";
 import styles from "./CryptoStat.module.css";
 
-export default function CryptoStat({ history, decimalLength }) {
-  
+export default function CryptoStat({ history, decimalLength, price }) {
   const { totalQuantity, totalSpent, averagePrice } = useMemo(() => {
     let totalQuantity = history.reduce(
       (sum, row) => sum + (parseFloat(row.quantity) || 0),
@@ -20,22 +19,28 @@ export default function CryptoStat({ history, decimalLength }) {
     return { totalQuantity, totalSpent, averagePrice };
   }, [history]);
 
+  const profit = parseFloat(((price-averagePrice)*totalQuantity).toFixed(decimalLength));
   return (
-    <div className={styles.statistics}>
-      <div className={styles.tooltipWrapper}>
-        <span className={styles.tooltip}>Total quantity</span>
-        <span className={styles.statValue}>Q: {totalQuantity}</span>
-      </div>
+    <>
+      <div className={styles.statistics}>
+        <div className={styles.tooltipWrapper}>
+          <span className={styles.tooltip}>Total quantity</span>
+          <span className={styles.statValue}>Q: {totalQuantity}</span>
+        </div>
 
-      <div className={styles.tooltipWrapper}>
-        <span className={styles.tooltip}>Total amount</span>
-        <span className={styles.statValue}>T: ${totalSpent}</span>
-      </div>
+        <div className={styles.tooltipWrapper}>
+          <span className={styles.tooltip}>Total amount</span>
+          <span className={styles.statValue}>T: ${totalSpent}</span>
+        </div>
 
-      <div className={styles.tooltipWrapper}>
-        <span className={styles.tooltip}>Average price</span>
-        <span className={styles.statValue}>AVG: ${averagePrice}</span>
+        <div className={styles.tooltipWrapper}>
+          <span className={styles.tooltip}>Average price</span>
+          <span className={styles.statValue}>AVG: ${averagePrice}</span>
+        </div>
       </div>
-    </div>
+      <div className={profit >= 0 ? styles.cryptoValue : styles.cryptoValueNegative}>
+        Profit/Loss: ${profit}
+      </div>
+    </>
   );
 }

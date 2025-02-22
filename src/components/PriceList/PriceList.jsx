@@ -44,10 +44,8 @@ export default function PriceList() {
               <CryptoStat
                 history={holdings[crypto.symbol]}
                 decimalLength={decimalLength[crypto.symbol] || 2}
+                price={marketData[crypto.symbol].price}
               />
-              <div className={styles.cryptoValue}>
-                Profit/Loss: ${value.toFixed(decimalLength)}
-              </div>
             </li>
           );
         })}
