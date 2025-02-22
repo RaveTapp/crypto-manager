@@ -5,7 +5,8 @@ import CryptoStat from "./CryptoStat.jsx/CryptoStat";
 import { useCryptoState } from "../../hooks/useCryptoState";
 
 export default function CryptoModal({ crypto, closeModal }) {
-  const { holdings, handleHoldingsChange, marketData } = useCryptoState();
+  const { holdings, handleHoldingsChange, marketData, decimalLength } =
+    useCryptoState();
   const currentHolding = holdings[crypto.symbol];
 
   const [editMode, setEditMode] = useState(false);
@@ -87,10 +88,6 @@ export default function CryptoModal({ crypto, closeModal }) {
   const handleOverlayClick = () => closeModal();
   const handleContentClick = (e) => e.stopPropagation();
 
-  const decimalLength = parseFloat(marketData[crypto.symbol]?.price)
-    ?.toString()
-    .split(".")[1]?.length;
-
   return (
     <div className={styles.overlay} onClick={handleOverlayClick}>
       <div className={styles.modal} onClick={handleContentClick}>
@@ -111,7 +108,10 @@ export default function CryptoModal({ crypto, closeModal }) {
           </div>
         </div>
 
-        <CryptoStat history={history} decimalLength={decimalLength} />
+        <CryptoStat
+          history={history}
+          decimalLength={decimalLength[crypto.symbol]}
+        />
 
         <div className={styles.modalContent}>
           <table ref={tableRef} className={styles.historyTable}>
@@ -183,7 +183,9 @@ export default function CryptoModal({ crypto, closeModal }) {
                       )}
                     </td>
                     <td data-row={rowIndex} data-col={3}>
-                      {total ? total.toFixed(decimalLength || 3) : "0.00"}
+                      {total
+                        ? total.toFixed(decimalLength[crypto.symbol] || 3)
+                        : "0.00"}
                     </td>
                     {editMode && (
                       <td>

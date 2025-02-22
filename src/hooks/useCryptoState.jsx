@@ -1,7 +1,7 @@
 import React, {
   useState,
   useEffect,
-  useRef,
+  useMemo,
   createContext,
   useContext,
 } from "react";
@@ -59,7 +59,7 @@ function useCryptoStateInternal() {
   useEffect(() => {
     saveToStorage("cryptoMenuOpen", cryptoMenuOpen);
   }, [cryptoMenuOpen]);
-  
+
   //const selectedCryptosRef = useRef(selectedCryptos);
 
   useEffect(() => {
@@ -183,6 +183,16 @@ function useCryptoStateInternal() {
     }
   };
 
+  const { decimalLength } = useMemo(() => {
+    var decimalLength = {};
+    Object.entries(marketData)?.map((c) => {
+      decimalLength[c[0]] = parseFloat(c[1].price)
+        ?.toString()
+        .split(".")[1]?.length;
+    });
+
+    return { decimalLength };
+  }, [marketData]);
 
   return {
     cryptoMenuOpen,
@@ -200,6 +210,7 @@ function useCryptoStateInternal() {
     renameCurrentPortfolio,
     addPortfolio,
     removePortfolio,
+    decimalLength,
   };
 }
 

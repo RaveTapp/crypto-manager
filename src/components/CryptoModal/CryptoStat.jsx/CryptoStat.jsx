@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import styles from "./CryptoStat.module.css";
 
-export default function CryptoStat({history, decimalLength}) {
+export default function CryptoStat({ history, decimalLength }) {
   const { totalQuantity, totalSpent, averagePrice } = useMemo(() => {
     const totalQuantity = history.reduce(
       (sum, row) => sum + (parseFloat(row.quantity) || 0),
