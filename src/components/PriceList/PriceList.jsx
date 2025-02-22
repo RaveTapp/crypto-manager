@@ -5,8 +5,13 @@ import CryptoStat from "../CryptoModal/CryptoStat.jsx/CryptoStat";
 import { useCryptoState } from "../../hooks/useCryptoState";
 
 export default function PriceList() {
-  const { marketData, selectedCryptos, holdings, calculatedValues, decimalLength } =
-    useCryptoState();
+  const {
+    marketData,
+    selectedCryptos,
+    holdings,
+    calculatedValues,
+    decimalLength,
+  } = useCryptoState();
   const [popupCrypto, setPopupCrypto] = useState(null);
 
   const handleBoxClick = (crypto) => {
@@ -20,15 +25,8 @@ export default function PriceList() {
   return (
     <div>
       <ul className={styles.priceList}>
-        {selectedCryptos.map((crypto) => {
-          const price = parseFloat(marketData[crypto.symbol]?.price) || 0;
-          const totalSpent = holdings[crypto.symbol].reduce(
-            (sum, row) =>
-              sum +
-              (parseFloat(row.price) || 0) * (parseFloat(row.quantity) || 0),
-            0
-          );
-          const value = calculatedValues[crypto.symbol] || 0;
+        {selectedCryptos?.map((crypto) => {
+          const price = parseFloat(marketData[crypto.symbol]?.price || 0);
           return (
             <li
               key={crypto.symbol}

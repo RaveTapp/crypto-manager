@@ -47,7 +47,7 @@ function useCryptoStateInternal() {
   const decimalLength = useMemo(() => {
     let decimalLength = {};
     Object.entries(marketData)?.map((c) => {
-      var tmp = parseFloat(c[1].price)?.toString().split(".")[1]?.length;
+      var tmp = parseFloat(c[1].price || 0)?.toString().split(".")[1]?.length;
       tmp > 2 ? (decimalLength[c[0]] = tmp) : (decimalLength[c[0]] = 2);
     });
     return decimalLength;
@@ -58,7 +58,7 @@ function useCryptoStateInternal() {
 
   useEffect(() => {
     let sum = 0;
-    const newCalculatedValues = selectedCryptos.reduce((acc, crypto) => {
+    const newCalculatedValues = selectedCryptos?.reduce((acc, crypto) => {
       const symbol = crypto.symbol;
       const amount = parseFloat(holdingsTotal[symbol] || 0);
       const price = marketData[symbol]?.price || 0;
@@ -76,7 +76,7 @@ function useCryptoStateInternal() {
       if (prev.some((item) => item.symbol === symbol)) {
         return prev.filter((item) => item.symbol !== symbol);
       } else {
-        const cryptoObj = supportedCryptos.find((c) => c.symbol === symbol);
+        const cryptoObj = supportedCryptos?.find((c) => c.symbol === symbol);
         return cryptoObj ? [...prev, cryptoObj] : prev;
       }
     });

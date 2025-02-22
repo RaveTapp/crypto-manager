@@ -50,7 +50,7 @@ export function usePortfolioState() {
   useEffect(() => {
     saveToStorage("currentPortfolioId", currentPortfolioId);
     currentPortfolio =
-      portfolios.find((p) => p.id === currentPortfolioId) || portfolios[0];
+      portfolios?.find((p) => p.id === currentPortfolioId) || portfolios[0];
     setSelectedCryptos(currentPortfolio.selectedCryptos);
     setHoldings(currentPortfolio.holdings);
   }, [currentPortfolioId]);
@@ -74,7 +74,7 @@ export function usePortfolioState() {
 
   const addPortfolio = (afterRemove) => {
     const newId =
-      portfolios.length > 0 ? Math.max(...portfolios.map((p) => p.id)) + 1 : 1;
+      portfolios?.length > 0 ? Math.max(...portfolios?.map((p) => p.id)) + 1 : 1;
     const newPortfolio = {
       id: newId,
       name: "New Portfolio",
@@ -108,7 +108,7 @@ export function usePortfolioState() {
 
   const removePortfolio = (id) => {
     if (window.confirm("Are you sure you want to remove this portfolio?")) {
-      const newPortfolios = portfolios.filter((p) => p.id !== id);
+      const newPortfolios = portfolios?.filter((p) => p.id !== id);
       setPortfolios(newPortfolios);
       if (id === currentPortfolioId) {
         setCurrentPortfolioId(newPortfolios.length ? newPortfolios[0].id : 1);

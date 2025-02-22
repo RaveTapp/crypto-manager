@@ -45,7 +45,7 @@ function Home() {
             addPortfolio={addPortfolio}
             removePortfolio={removePortfolio}
           />
-          <h2>${totalValue.toFixed(2)}</h2>
+          <h2>${totalValue?.toFixed(2)}</h2>
         </div>
 
         <div className={styles.content}>

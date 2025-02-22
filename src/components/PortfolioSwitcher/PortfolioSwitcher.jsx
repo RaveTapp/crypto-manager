@@ -17,7 +17,7 @@ export default function PortfolioSwitcher() {
   const [renaming, setRenaming] = useState(false);
   const [newName, setNewName] = useState("");
 
-  const currentPortfolio = portfolios.find((p) => p.id === currentPortfolioId);
+  const currentPortfolio = portfolios?.find((p) => p.id === currentPortfolioId);
 
   const handleRename = () => {
     if (newName.trim()) {

@@ -35,18 +35,18 @@ function useCryptoMenuStateInternal(marketData, selectedCryptos) {
   }, [maxCoins]);
 
   const sortedCryptos = useMemo(() => {
-    const lowerQuery = searchQuery.toLowerCase();
-    const filteredCryptos = supportedCryptos.filter((crypto) => {
+    const lowerQuery = searchQuery?.toLowerCase();
+    const filteredCryptos = supportedCryptos?.filter((crypto) => {
       const matchesSearch =
         crypto.name.toLowerCase().includes(lowerQuery) ||
         crypto.acronym.toLowerCase().includes(lowerQuery);
       return onlySelected
         ? matchesSearch &&
-            selectedCryptos.some((el) => el.symbol === crypto.symbol)
+            selectedCryptos?.some((el) => el.symbol === crypto.symbol)
         : matchesSearch;
     });
 
-    const sorted = filteredCryptos.sort((a, b) => {
+    const sorted = filteredCryptos?.sort((a, b) => {
       try {
         const dataA = marketData[a.symbol] || {};
         const dataB = marketData[b.symbol] || {};

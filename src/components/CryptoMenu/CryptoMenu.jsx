@@ -81,7 +81,7 @@ export default function CryptoMenu() {
       </div>
 
       <div className={styles.cryptoMenu}>
-        {sortedCryptos.slice(0, maxCoins).map((crypto) => {
+        {sortedCryptos?.slice(0, maxCoins).map((crypto) => {
           const data = marketData[crypto.symbol] || {};
           let statValue = "";
 
@@ -104,13 +104,13 @@ export default function CryptoMenu() {
           const isNegative =
             (sortCriteria === "gain" || sortCriteria === "loss") &&
             data &&
-            parseFloat(data.priceChangePercent) < 0;
+            parseFloat(data.priceChangePercent || 0) < 0;
 
           return (
             <div
               key={crypto.symbol}
               className={`${styles.menuItem} ${
-                selectedCryptos.some((el) => el.symbol === crypto.symbol)
+                selectedCryptos?.some((el) => el.symbol === crypto.symbol)
                   ? styles.selected
                   : ""
               }`}

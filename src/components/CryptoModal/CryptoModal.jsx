@@ -40,12 +40,12 @@ export default function CryptoModal({ crypto, closeModal }) {
       if (!confirmDelete) return;
       setFirstRemoveConfirmed(true);
     }
-    setHistory((prev) => prev.filter((_, i) => i !== rowIndex));
+    setHistory((prev) => prev?.filter((_, i) => i !== rowIndex));
   };
 
   const updateRow = (rowIndex, field, value) => {
     setHistory((prev) =>
-      prev.map((row, i) => (i === rowIndex ? { ...row, [field]: value } : row))
+      prev?.map((row, i) => (i === rowIndex ? { ...row, [field]: value } : row))
     );
   };
 
@@ -71,7 +71,7 @@ export default function CryptoModal({ crypto, closeModal }) {
 
   const limitInputLength = (e) => {
     if (e.target.value.length > 15)
-      e.target.value = e.target.value.slice(0, 15);
+      e.target.value = e.target.value?.slice(0, 15);
   };
 
   useEffect(() => {
