@@ -35,7 +35,7 @@
 }
 
 .statistics {
-  margin-bottom: 8px;
+  margin-bottom: 16px;
   width: 100%;
   display: flex;
   justify-content: space-evenly;
@@ -51,15 +51,9 @@
 }
 
 .cryptoValue {
-  margin-top: 10px;
+  margin-bottom: 16px;
   font-size: 14px;
   font-weight: bold;
   color: #00ff99;
-}
-
-.cryptoValueNegative {
-  margin-top: 10px;
-  font-size: 14px;
-  font-weight: bold;
-  color: red;
+  text-align: center;
 }

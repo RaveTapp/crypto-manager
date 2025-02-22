@@ -38,7 +38,7 @@ export default function CryptoStat({ history, decimalLength, price }) {
           <span className={styles.statValue}>AVG: ${averagePrice}</span>
         </div>
       </div>
-      <div className={profit >= 0 ? styles.cryptoValue : styles.cryptoValueNegative}>
+      <div className={styles.cryptoValue} style={profit < 0 ? { color: "red" } : {}}>
         Profit/Loss: ${profit}
       </div>
     </>
