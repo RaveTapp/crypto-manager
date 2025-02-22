@@ -57,25 +57,22 @@ export default function CryptoModal({ crypto, closeModal }) {
 
   const handleKeyDown = useCallback((e, rowIndex, colIndex) => {
     const key = e.key;
-    if (
-      key === "ArrowRight" ||
-      key === "ArrowLeft" ||
-      key === "ArrowUp" ||
-      key === "ArrowDown" ||
-      key === "Tab"
-    ) {
+    if (key === "Tab") {
       e.preventDefault();
       let newRow = rowIndex;
       let newCol = colIndex;
-      if (key === "ArrowRight" || (key === "Tab" && !e.shiftKey)) newCol++;
-      if (key === "ArrowLeft" || (key === "Tab" && e.shiftKey)) newCol--;
-      if (key === "ArrowDown") newRow++;
-      if (key === "ArrowUp") newRow--;
+      if (key === "Tab" && !e.shiftKey) newCol++;
+      if (key === "Tab" && e.shiftKey) newCol--;
       const selector = `[data-row='${newRow}'][data-col='${newCol}']`;
       const next = document.querySelector(selector);
       if (next) next.focus();
     }
   }, []);
+
+  const limitInputLength = (e) => {
+    if (e.target.value.length > 15)
+      e.target.value = e.target.value.slice(0, 15);
+  };
 
   useEffect(() => {
     const handleEsc = (e) => {
@@ -158,6 +155,7 @@ export default function CryptoModal({ crypto, closeModal }) {
                             updateRow(rowIndex, "price", e.target.value)
                           }
                           onKeyDown={(e) => handleKeyDown(e, rowIndex, 1)}
+                          onInput={(e) => limitInputLength(e)}
                         />
                       ) : row.price ? (
                         parseFloat(row.price)
@@ -177,6 +175,7 @@ export default function CryptoModal({ crypto, closeModal }) {
                             updateRow(rowIndex, "quantity", e.target.value)
                           }
                           onKeyDown={(e) => handleKeyDown(e, rowIndex, 2)}
+                          onInput={(e) => limitInputLength(e)}
                         />
                       ) : (
                         row.quantity
@@ -184,7 +183,9 @@ export default function CryptoModal({ crypto, closeModal }) {
                     </td>
                     <td data-row={rowIndex} data-col={3}>
                       {total
-                        ? parseFloat(total.toFixed(decimalLength[crypto.symbol] || 3))
+                        ? parseFloat(
+                            total.toFixed(decimalLength[crypto.symbol] || 3)
+                          )
                         : "0.00"}
                     </td>
                     {editMode && (

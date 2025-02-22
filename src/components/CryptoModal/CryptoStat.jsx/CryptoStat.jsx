@@ -15,7 +15,6 @@ export default function CryptoStat({ history, decimalLength }) {
     );
     let averagePrice = totalQuantity ? totalSpent / totalQuantity : 0;
 
-    totalQuantity = parseFloat(totalQuantity.toFixed(decimalLength));
     totalSpent = parseFloat(totalSpent.toFixed(decimalLength));
     averagePrice = parseFloat(averagePrice.toFixed(decimalLength));
     return { totalQuantity, totalSpent, averagePrice };

@@ -52,6 +52,7 @@ export default function CryptoMenu() {
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           className={styles.searchInput}
+          maxLength={15}
         />
 
         <label className={styles.checkboxLabel}>
