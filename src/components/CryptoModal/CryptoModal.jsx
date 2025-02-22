@@ -184,7 +184,7 @@ export default function CryptoModal({ crypto, closeModal }) {
                     </td>
                     <td data-row={rowIndex} data-col={3}>
                       {total
-                        ? total.toFixed(decimalLength[crypto.symbol] || 3)
+                        ? parseFloat(total.toFixed(decimalLength[crypto.symbol] || 3))
                         : "0.00"}
                     </td>
                     {editMode && (

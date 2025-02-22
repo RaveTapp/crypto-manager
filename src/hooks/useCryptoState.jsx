@@ -42,12 +42,16 @@ function useCryptoStateInternal() {
     return () => clearInterval(interval);
   }, []);
 
+  
   const decimalLength = useMemo(() => {
-    return Object.entries(marketData).reduce((acc, [symbol, data]) => {
-      const decimalPlaces = data?.price?.toString().split(".")[1]?.length || 2;
-      acc[symbol] = decimalPlaces > 2 ? decimalPlaces : 2;
-      return acc;
-    }, {});
+    let decimalLength = {};
+    Object.entries(marketData)?.map((c) => {
+      var tmp = parseFloat(c[1].price)
+        ?.toString()
+        .split(".")[1]?.length;
+        tmp > 2 ? decimalLength[c[0]] = tmp : decimalLength[c[0]] = 2
+    });
+    return decimalLength;
   }, [marketData]);
 
   const [calculatedValues, setCalculatedValues] = useState({});
