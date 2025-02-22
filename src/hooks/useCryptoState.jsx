@@ -186,11 +186,12 @@ function useCryptoStateInternal() {
   const { decimalLength } = useMemo(() => {
     var decimalLength = {};
     Object.entries(marketData)?.map((c) => {
-      decimalLength[c[0]] = parseFloat(c[1].price)
+      var tmp = parseFloat(c[1].price)
         ?.toString()
         .split(".")[1]?.length;
+        tmp > 2 ? decimalLength[c[0]] = tmp : decimalLength[c[0]] = 2
     });
-
+    console.log(decimalLength);
     return { decimalLength };
   }, [marketData]);
 

@@ -3,16 +3,20 @@ import styles from "./CryptoStat.module.css";
 
 export default function CryptoStat({ history, decimalLength }) {
   const { totalQuantity, totalSpent, averagePrice } = useMemo(() => {
-    const totalQuantity = history.reduce(
+    let totalQuantity = history.reduce(
       (sum, row) => sum + (parseFloat(row.quantity) || 0),
       0
     );
-    const totalSpent = history.reduce(
+    let totalSpent = history.reduce(
       (sum, row) =>
         sum + (parseFloat(row.price) || 0) * (parseFloat(row.quantity) || 0),
       0
     );
-    const averagePrice = totalQuantity ? totalSpent / totalQuantity : 0;
+    let averagePrice = totalQuantity ? totalSpent / totalQuantity : 0;
+
+    totalQuantity = parseFloat(totalQuantity.toFixed(decimalLength));
+    totalSpent = parseFloat(totalSpent.toFixed(decimalLength));
+    averagePrice = parseFloat(averagePrice.toFixed(decimalLength));
     return { totalQuantity, totalSpent, averagePrice };
   }, [history]);
 
@@ -20,23 +24,17 @@ export default function CryptoStat({ history, decimalLength }) {
     <div className={styles.statistics}>
       <div className={styles.tooltipWrapper}>
         <span className={styles.tooltip}>Total quantity</span>
-        <span className={styles.statValue}>
-          Q: {totalQuantity.toFixed(decimalLength || 3)}
-        </span>
+        <span className={styles.statValue}>Q: {totalQuantity}</span>
       </div>
 
       <div className={styles.tooltipWrapper}>
         <span className={styles.tooltip}>Total amount</span>
-        <span className={styles.statValue}>
-          T: ${totalSpent.toFixed(decimalLength || 3)}
-        </span>
+        <span className={styles.statValue}>T: ${totalSpent}</span>
       </div>
 
       <div className={styles.tooltipWrapper}>
         <span className={styles.tooltip}>Average price</span>
-        <span className={styles.statValue}>
-          AVG: ${averagePrice.toFixed(decimalLength || 3)}
-        </span>
+        <span className={styles.statValue}>AVG: ${averagePrice}</span>
       </div>
     </div>
   );
