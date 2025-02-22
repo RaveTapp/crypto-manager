@@ -42,14 +42,11 @@ function useCryptoStateInternal() {
     return () => clearInterval(interval);
   }, []);
 
-  
   const decimalLength = useMemo(() => {
     let decimalLength = {};
     Object.entries(marketData)?.map((c) => {
-      var tmp = parseFloat(c[1].price)
-        ?.toString()
-        .split(".")[1]?.length;
-        tmp > 2 ? decimalLength[c[0]] = tmp : decimalLength[c[0]] = 2
+      var tmp = parseFloat(c[1].price)?.toString().split(".")[1]?.length;
+      tmp > 2 ? (decimalLength[c[0]] = tmp) : (decimalLength[c[0]] = 2);
     });
     return decimalLength;
   }, [marketData]);
@@ -61,7 +58,7 @@ function useCryptoStateInternal() {
     let sum = 0;
     const newCalculatedValues = selectedCryptos.reduce((acc, crypto) => {
       const symbol = crypto.symbol;
-      const amount = parseFloat(holdings[symbol]?.quantity) || 0;
+      const amount = parseFloat(holdingsTotal[symbol]) || 0;
       const price = marketData[symbol]?.price || 0;
       acc[symbol] = amount * price;
       sum += amount * price;
@@ -94,6 +91,14 @@ function useCryptoStateInternal() {
     saveToStorage("cryptoMenuOpen", cryptoMenuOpen);
   }, [cryptoMenuOpen]);
 
+  const [holdingsTotal, setHoldingsTotal] = useState(() =>
+    getFromStorage("holdingsTotal", {})
+  );
+
+  useEffect(() => {
+    saveToStorage("holdingsTotal", holdingsTotal);
+  }, [holdingsTotal]);
+
   return {
     cryptoMenuOpen,
     setCryptoMenuOpen,
@@ -111,6 +116,8 @@ function useCryptoStateInternal() {
     addPortfolio,
     removePortfolio,
     decimalLength,
+    holdingsTotal,
+    setHoldingsTotal,
   };
 }
 

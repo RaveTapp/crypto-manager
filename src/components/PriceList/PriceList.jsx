@@ -45,6 +45,7 @@ export default function PriceList() {
                 history={holdings[crypto.symbol]}
                 decimalLength={decimalLength[crypto.symbol] || 2}
                 price={marketData[crypto.symbol].price}
+                symbol={crypto.symbol}
               />
             </li>
           );

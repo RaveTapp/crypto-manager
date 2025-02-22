@@ -1,12 +1,16 @@
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
 import styles from "./CryptoStat.module.css";
+import { useCryptoState } from "../../../hooks/useCryptoState";
 
-export default function CryptoStat({ history, decimalLength, price }) {
+export default function CryptoStat({ history, decimalLength, price, symbol }) {
+  const {setHoldingsTotal} = useCryptoState();
+
   const { totalQuantity, totalSpent, averagePrice } = useMemo(() => {
     let totalQuantity = history.reduce(
       (sum, row) => sum + (parseFloat(row.quantity) || 0),
       0
     );
+    
     let totalSpent = history.reduce(
       (sum, row) =>
         sum + (parseFloat(row.price) || 0) * (parseFloat(row.quantity) || 0),
@@ -18,6 +22,10 @@ export default function CryptoStat({ history, decimalLength, price }) {
     averagePrice = parseFloat(averagePrice.toFixed(decimalLength));
     return { totalQuantity, totalSpent, averagePrice };
   }, [history]);
+
+  useEffect(() => {
+    setHoldingsTotal((prev) => ({ ...prev, [symbol]: totalQuantity }));
+  }, [totalQuantity]);
 
   const profit = parseFloat(((price-averagePrice)*totalQuantity).toFixed(decimalLength));
   return (

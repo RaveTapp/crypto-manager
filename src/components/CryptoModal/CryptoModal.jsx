@@ -109,6 +109,7 @@ export default function CryptoModal({ crypto, closeModal }) {
           history={history}
           decimalLength={decimalLength[crypto.symbol]}
           price={marketData[crypto.symbol].price}
+          symbol={crypto.symbol}
         />
 
         <div className={styles.modalContent}>
