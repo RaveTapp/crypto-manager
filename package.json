@@ -2,9 +2,12 @@
   "name": "crypto-manager",
   "private": true,
   "version": "1.0.0",
+  "homepage": "https://ravetapp.github.io/crypto-manager",
   "type": "module",
   "main": "src/main.jsx",
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist",
     "dev": "vite",
     "build": "vite build",
     "test": "vitest",
@@ -24,8 +27,9 @@
   "devDependencies": {
     "@types/react": "^18.3.3",
     "@types/react-dom": "^18.3.0",
-    "@vitejs/plugin-react": "^4.3.1",
+    "@vitejs/plugin-react": "^1.3.2",
+    "gh-pages": "^6.3.0",
     "jsdom": "^24.1.1",
-    "vite": "^5.3.4"
+    "vite": "^6.1.1"
   }
 }
