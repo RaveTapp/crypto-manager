@@ -7,18 +7,12 @@ import { Menu } from "lucide-react";
 import PortfolioSwitcher from "../PortfolioSwitcher/PortfolioSwitcher";
 import { CryptoMenuProvider } from "../../hooks/useCryptoMenuState";
 
-//localStorage.clear();
+localStorage.clear();
 
 function Home() {
   const {
     cryptoMenuOpen,
     setCryptoMenuOpen,
-    portfolios,
-    currentPortfolioId,
-    switchPortfolio,
-    renameCurrentPortfolio,
-    addPortfolio,
-    removePortfolio,
     totalValue,
     marketData,
     selectedCryptos,
@@ -37,14 +31,7 @@ function Home() {
           >
             <Menu size={24} />
           </button>
-          <PortfolioSwitcher
-            portfolios={portfolios}
-            currentPortfolioId={currentPortfolioId}
-            switchPortfolio={switchPortfolio}
-            renameCurrentPortfolio={renameCurrentPortfolio}
-            addPortfolio={addPortfolio}
-            removePortfolio={removePortfolio}
-          />
+          <PortfolioSwitcher />
           <h2>${totalValue?.toFixed(2)}</h2>
         </div>
 

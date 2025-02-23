@@ -73,9 +73,10 @@ function useCryptoStateInternal() {
   // OTHER STATE & FUNCTIONS
   const toggleSelection = (symbol) => {
     setSelectedCryptos((prev) => {
-      if (prev.some((item) => item.symbol === symbol)) {
+      if (prev.some((item) => item.symbol === symbol)) { //Deselect
         return prev.filter((item) => item.symbol !== symbol);
-      } else {
+      } else { //Select
+        setCryptoMenuOpen(false);
         const cryptoObj = supportedCryptos?.find((c) => c.symbol === symbol);
         return cryptoObj ? [...prev, cryptoObj] : prev;
       }
@@ -87,7 +88,7 @@ function useCryptoStateInternal() {
   };
 
   const [cryptoMenuOpen, setCryptoMenuOpen] = useState(() =>
-    getFromStorage("cryptoMenuOpen", true)
+    getFromStorage("cryptoMenuOpen", false)
   );
   useEffect(() => {
     saveToStorage("cryptoMenuOpen", cryptoMenuOpen);
