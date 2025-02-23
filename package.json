@@ -2,7 +2,7 @@
   "name": "crypto-manager",
   "private": true,
   "version": "1.0.0",
-  "homepage": "https://ravetapp.github.io/crypto-manager",
+  "homepage": "https://ravetapp.github.io/crypto-manager/",
   "type": "module",
   "main": "src/main.jsx",
   "scripts": {
