@@ -3,11 +3,11 @@ import styles from "./Home.module.css";
 import PriceList from "../PriceList/PriceList";
 import CryptoMenu from "../CryptoMenu/CryptoMenu";
 import { useCryptoState } from "../../hooks/useCryptoState";
-import { Menu } from "lucide-react";
+import { Plus } from "lucide-react";
 import PortfolioSwitcher from "../PortfolioSwitcher/PortfolioSwitcher";
 import { CryptoMenuProvider } from "../../hooks/useCryptoMenuState";
 
-localStorage.clear();
+//localStorage.clear();
 
 function Home() {
   const {
@@ -25,12 +25,6 @@ function Home() {
     >
       <div className={styles.container}>
         <div className={styles.header}>
-          <button
-            className={styles.menuButton}
-            onClick={() => setCryptoMenuOpen((prev) => !prev)}
-          >
-            <Menu size={24} />
-          </button>
           <PortfolioSwitcher />
           <h2>${totalValue?.toFixed(2)}</h2>
         </div>
@@ -38,6 +32,14 @@ function Home() {
         <div className={styles.content}>
           {cryptoMenuOpen && <CryptoMenu />}
           <PriceList />
+          <div className={styles.menuBtnContainer}>
+            <button
+              className={styles.menuButton}
+              onClick={() => setCryptoMenuOpen((prev) => !prev)}
+            >
+              <Plus size={24} />
+            </button>
+          </div>
         </div>
       </div>
     </CryptoMenuProvider>
