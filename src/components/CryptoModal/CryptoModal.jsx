@@ -4,12 +4,11 @@ import { Edit, Plus, Save, Trash } from "lucide-react";
 import CryptoStat from "./CryptoStat.jsx/CryptoStat";
 import { useCryptoState } from "../../hooks/useCryptoState";
 
-export default function CryptoModal({ crypto, closeModal }) {
+export default function CryptoModal({ crypto, closeModal, editMode, setEditMode }) {
   const { holdings, handleHoldingsChange, marketData, decimalLength } =
     useCryptoState();
   const currentHolding = holdings[crypto.symbol];
 
-  const [editMode, setEditMode] = useState(false);
   const [history, setHistory] = useState(() => {
     const today = new Date().toISOString().slice(0, 10);
     if (currentHolding) return currentHolding;
@@ -24,8 +23,6 @@ export default function CryptoModal({ crypto, closeModal }) {
   const [firstRemoveConfirmed, setFirstRemoveConfirmed] = useState(false);
 
   const tableRef = useRef(null);
-
-  const toggleEditMode = () => setEditMode((prev) => !prev);
 
   const addRow = () => {
     const today = new Date().toISOString().slice(0, 10);
@@ -94,7 +91,7 @@ export default function CryptoModal({ crypto, closeModal }) {
         <div className={styles.modalHeader}>
           <h2>{crypto.name} Purchase History</h2>
           <div className={styles.modalActions}>
-            <button className={styles.iconButton} onClick={toggleEditMode}>
+            <button className={styles.iconButton} onClick={() => setEditMode((prev) => !prev)}>
               <Edit size={20} />
             </button>
             {editMode && (

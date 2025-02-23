@@ -3,6 +3,7 @@ import styles from "./PriceList.module.css";
 import CryptoModal from "../CryptoModal/CryptoModal";
 import CryptoStat from "../CryptoModal/CryptoStat.jsx/CryptoStat";
 import { useCryptoState } from "../../hooks/useCryptoState";
+import { Edit } from "lucide-react";
 
 export default function PriceList() {
   const {
@@ -13,12 +14,14 @@ export default function PriceList() {
     decimalLength,
   } = useCryptoState();
   const [popupCrypto, setPopupCrypto] = useState(null);
+  const [editMode, setEditMode] = useState(false);
 
   const handleBoxClick = (crypto) => {
     setPopupCrypto(crypto);
   };
 
   const closeModal = () => {
+    setEditMode(false);
     setPopupCrypto(null);
   };
 
@@ -38,6 +41,12 @@ export default function PriceList() {
                   {crypto.name} ({crypto.symbol}): ${price || ""}
                 </span>
               </div>
+              <button
+                className={styles.iconButton}
+                onClick={() => setEditMode(true)}
+              >
+                <Edit size={20} />
+              </button>
 
               <CryptoStat
                 history={holdings[crypto.symbol]}
@@ -50,7 +59,12 @@ export default function PriceList() {
         })}
       </ul>
       {popupCrypto && (
-        <CryptoModal crypto={popupCrypto} closeModal={closeModal} />
+        <CryptoModal
+          crypto={popupCrypto}
+          closeModal={closeModal}
+          editMode={editMode}
+          setEditMode={setEditMode}
+        />
       )}
     </div>
   );

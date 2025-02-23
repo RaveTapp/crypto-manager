@@ -17,6 +17,7 @@
   text-align: center;
   cursor: pointer;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  position: relative;
 }
 
 .cryptoInfo {
@@ -61,4 +62,18 @@
   font-size: 14px;
   font-weight: bold;
   color: #00ff99;
+}
+
+.iconButton {
+  background: none;
+  border: none;
+  color: #e0e0e0;
+  cursor: pointer;
+  position: absolute;
+  right: 12px;
+  top: 12px;
+}
+
+.iconButton:hover {
+  color: #1e88e5;
 }
