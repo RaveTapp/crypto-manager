@@ -4,7 +4,12 @@ import { Edit, Plus, Save, Trash } from "lucide-react";
 import CryptoStat from "./CryptoStat.jsx/CryptoStat";
 import { useCryptoState } from "../../hooks/useCryptoState";
 
-export default function CryptoModal({ crypto, closeModal, editMode, setEditMode }) {
+export default function CryptoModal({
+  crypto,
+  closeModal,
+  editMode,
+  setEditMode,
+}) {
   const { holdings, handleHoldingsChange, marketData, decimalLength } =
     useCryptoState();
   const currentHolding = holdings[crypto.symbol];
@@ -22,7 +27,6 @@ export default function CryptoModal({ crypto, closeModal, editMode, setEditMode 
   });
   const [firstRemoveConfirmed, setFirstRemoveConfirmed] = useState(false);
   const [changesSaved, setChangesSaved] = useState(true);
-  
 
   const tableRef = useRef(null);
 
@@ -57,20 +61,42 @@ export default function CryptoModal({ crypto, closeModal, editMode, setEditMode 
     handleHoldingsChange(crypto.symbol, history);
     setChangesSaved(true);
   };
-
+  //Pressing TAB or ENTER will move focus forward, if also holding SHIFT, it'll be backwards.
   const handleKeyDown = useCallback((e, rowIndex, colIndex) => {
     const key = e.key;
-    if (key === "Tab") {
+    const numCols = 3; // Date, Price, Quantity
+    const lastRow = history.length - 1;
+    if (key === "Tab" || key === "Enter") {
       e.preventDefault();
       let newRow = rowIndex;
       let newCol = colIndex;
-      if (key === "Tab" && !e.shiftKey) newCol++;
-      if (key === "Tab" && e.shiftKey) newCol--;
-      const selector = `[data-row='${newRow}'][data-col='${newCol}']`;
-      const next = document.querySelector(selector);
-      if (next) next.focus();
+      if (!e.shiftKey) {
+        // Move forward
+        newCol++;
+        if (newCol > numCols - 1) {
+          newCol = 0;
+          newRow++;
+          if (newRow > lastRow) {
+            addRow();
+            newRow = history.length;
+          }
+        }
+      } else {
+        // Move backward
+        newCol--;
+        if (newCol < 0) {
+          newCol = numCols - 1;
+          newRow--;
+          if (newRow < 0) return;
+        }
+      }
+      setTimeout(() => {
+        const selector = `[data-row='${newRow}'][data-col='${newCol}']`;
+        const next = document.querySelector(selector);
+        if (next) next.focus();
+      }, 5);
     }
-  }, []);
+  }, [history]);
 
   const limitInputLength = (e) => {
     if (e.target.value.length > 15)
@@ -88,7 +114,8 @@ export default function CryptoModal({ crypto, closeModal, editMode, setEditMode 
   useEffect(() => {
     if (!changesSaved) {
       const handleBeforeUnload = (e) => {
-        const message = "You have unsaved changes. Are you sure you want to leave?";
+        const message =
+          "You have unsaved changes. Are you sure you want to leave?";
         e.returnValue = message; // For most browsers
         return message; // Required for Chrome
       };
@@ -114,13 +141,16 @@ export default function CryptoModal({ crypto, closeModal, editMode, setEditMode 
   return (
     <div className={styles.overlay} onClick={handleCloseModal}>
       <div className={styles.modal} onClick={handleContentClick}>
-        <button className={styles.closeButton} onClick={closeModal}>
+        <button className={styles.closeButton} onClick={handleCloseModal}>
           X
         </button>
         <div className={styles.modalHeader}>
           <h2>{crypto.name} Purchase History</h2>
           <div className={styles.modalActions}>
-            <button className={styles.iconButton} onClick={() => setEditMode((prev) => !prev)}>
+            <button
+              className={styles.iconButton}
+              onClick={() => setEditMode((prev) => !prev)}
+            >
               <Edit size={20} />
             </button>
             {(editMode || !changesSaved) && (
