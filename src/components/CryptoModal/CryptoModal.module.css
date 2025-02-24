@@ -133,6 +133,11 @@
   border: 1px solid #e0e0e0;
 }
 
+.infoTooltip{
+  width: 100px;
+  text-wrap: balance;
+}
+
 .tooltipWrapper:hover .tooltip {
   display: block;
 }

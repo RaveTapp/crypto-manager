@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import styles from "./CryptoModal.module.css";
-import { Edit, Plus, Save, Trash } from "lucide-react";
+import { Edit, Plus, Save, Trash, Info } from "lucide-react";
 import CryptoStat from "./CryptoStat.jsx/CryptoStat";
 import { useCryptoState } from "../../hooks/useCryptoState";
 
@@ -62,41 +62,44 @@ export default function CryptoModal({
     setChangesSaved(true);
   };
   //Pressing TAB or ENTER will move focus forward, if also holding SHIFT, it'll be backwards.
-  const handleKeyDown = useCallback((e, rowIndex, colIndex) => {
-    const key = e.key;
-    const numCols = 3; // Date, Price, Quantity
-    const lastRow = history.length - 1;
-    if (key === "Tab" || key === "Enter") {
-      e.preventDefault();
-      let newRow = rowIndex;
-      let newCol = colIndex;
-      if (!e.shiftKey) {
-        // Move forward
-        newCol++;
-        if (newCol > numCols - 1) {
-          newCol = 0;
-          newRow++;
-          if (newRow > lastRow) {
-            addRow();
-            newRow = history.length;
+  const handleKeyDown = useCallback(
+    (e, rowIndex, colIndex) => {
+      const key = e.key;
+      const numCols = 3; // Date, Price, Quantity
+      const lastRow = history.length - 1;
+      if (key === "Tab" || key === "Enter") {
+        e.preventDefault();
+        let newRow = rowIndex;
+        let newCol = colIndex;
+        if (!e.shiftKey) {
+          // Move forward
+          newCol++;
+          if (newCol > numCols - 1) {
+            newCol = 0;
+            newRow++;
+            if (newRow > lastRow) {
+              addRow();
+              newRow = history.length;
+            }
+          }
+        } else {
+          // Move backward
+          newCol--;
+          if (newCol < 0) {
+            newCol = numCols - 1;
+            newRow--;
+            if (newRow < 0) return;
           }
         }
-      } else {
-        // Move backward
-        newCol--;
-        if (newCol < 0) {
-          newCol = numCols - 1;
-          newRow--;
-          if (newRow < 0) return;
-        }
+        setTimeout(() => {
+          const selector = `[data-row='${newRow}'][data-col='${newCol}']`;
+          const next = document.querySelector(selector);
+          if (next) next.focus();
+        }, 5);
       }
-      setTimeout(() => {
-        const selector = `[data-row='${newRow}'][data-col='${newCol}']`;
-        const next = document.querySelector(selector);
-        if (next) next.focus();
-      }, 5);
-    }
-  }, [history]);
+    },
+    [history]
+  );
 
   const limitInputLength = (e) => {
     if (e.target.value.length > 15)
@@ -147,16 +150,30 @@ export default function CryptoModal({
         <div className={styles.modalHeader}>
           <h2>{crypto.name} Purchase History</h2>
           <div className={styles.modalActions}>
-            <button
-              className={styles.iconButton}
-              onClick={() => setEditMode((prev) => !prev)}
-            >
-              <Edit size={20} />
-            </button>
-            {(editMode || !changesSaved) && (
-              <button className={styles.iconButton} onClick={handleSave}>
-                <Save size={20} />
+            {editMode && (
+              <div className={styles.tooltipWrapper}>
+                <span className={`${styles.tooltip} ${styles.infoTooltip}`}>
+                  TAB or ENTER to move focus forward, hold SHIFT for backwards.
+                </span>
+                <Info size={20} style={{ color: "#888" }} />
+              </div>
+            )}
+            <div className={styles.tooltipWrapper}>
+              <span className={styles.tooltip}>Edit Mode</span>
+              <button
+                className={styles.iconButton}
+                onClick={() => setEditMode((prev) => !prev)}
+              >
+                <Edit size={20} />
               </button>
+            </div>
+            {(editMode || !changesSaved) && (
+              <div className={styles.tooltipWrapper}>
+                <span className={styles.tooltip}>Save</span>
+                <button className={styles.iconButton} onClick={handleSave}>
+                  <Save size={20} />
+                </button>
+              </div>
             )}
           </div>
         </div>
