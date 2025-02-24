@@ -21,12 +21,15 @@ export default function CryptoModal({ crypto, closeModal, editMode, setEditMode 
     ];
   });
   const [firstRemoveConfirmed, setFirstRemoveConfirmed] = useState(false);
+  const [changesSaved, setChangesSaved] = useState(true);
+  
 
   const tableRef = useRef(null);
 
   const addRow = () => {
     const today = new Date().toISOString().slice(0, 10);
     setHistory([...history, { date: today, price: "", quantity: "" }]);
+    setChangesSaved(false);
   };
 
   const removeRow = (rowIndex) => {
@@ -38,18 +41,21 @@ export default function CryptoModal({ crypto, closeModal, editMode, setEditMode 
       setFirstRemoveConfirmed(true);
     }
     setHistory((prev) => prev?.filter((_, i) => i !== rowIndex));
+    setChangesSaved(false);
   };
 
   const updateRow = (rowIndex, field, value) => {
     setHistory((prev) =>
       prev?.map((row, i) => (i === rowIndex ? { ...row, [field]: value } : row))
     );
+    setChangesSaved(false);
   };
 
   const handleSave = () => {
     setEditMode(false);
     setFirstRemoveConfirmed(false);
     handleHoldingsChange(crypto.symbol, history);
+    setChangesSaved(true);
   };
 
   const handleKeyDown = useCallback((e, rowIndex, colIndex) => {
@@ -73,17 +79,40 @@ export default function CryptoModal({ crypto, closeModal, editMode, setEditMode 
 
   useEffect(() => {
     const handleEsc = (e) => {
-      if (e.key === "Escape") closeModal();
+      if (e.key === "Escape") handleCloseModal();
     };
     document.addEventListener("keydown", handleEsc);
     return () => document.removeEventListener("keydown", handleEsc);
   }, [closeModal]);
 
-  const handleOverlayClick = () => closeModal();
+  useEffect(() => {
+    if (!changesSaved) {
+      const handleBeforeUnload = (e) => {
+        const message = "You have unsaved changes. Are you sure you want to leave?";
+        e.returnValue = message; // For most browsers
+        return message; // Required for Chrome
+      };
+      window.addEventListener("beforeunload", handleBeforeUnload);
+
+      return () => {
+        window.removeEventListener("beforeunload", handleBeforeUnload);
+      };
+    }
+  }, [changesSaved, editMode]);
+
+  const handleCloseModal = () => {
+    if (!changesSaved) {
+      const confirmClose = window.confirm(
+        "You have unsaved changes. Are you sure you want to close?"
+      );
+      if (!confirmClose) return;
+    }
+    closeModal();
+  };
   const handleContentClick = (e) => e.stopPropagation();
 
   return (
-    <div className={styles.overlay} onClick={handleOverlayClick}>
+    <div className={styles.overlay} onClick={handleCloseModal}>
       <div className={styles.modal} onClick={handleContentClick}>
         <button className={styles.closeButton} onClick={closeModal}>
           X
@@ -94,7 +123,7 @@ export default function CryptoModal({ crypto, closeModal, editMode, setEditMode 
             <button className={styles.iconButton} onClick={() => setEditMode((prev) => !prev)}>
               <Edit size={20} />
             </button>
-            {editMode && (
+            {(editMode || !changesSaved) && (
               <button className={styles.iconButton} onClick={handleSave}>
                 <Save size={20} />
               </button>
