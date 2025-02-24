@@ -18,6 +18,15 @@ export default function CryptoStat({ history, decimalLength, price, symbol }) {
     );
     let averagePrice = totalQuantity ? totalSpent / totalQuantity : 0;
 
+    const maxQuantityDecimal = Math.max(
+      ...history.map((row) => {
+        const quantity = row.quantity?.toString().split(".")[1];
+        return quantity ? quantity.length : 0;
+      }),
+      0
+    );
+
+    totalQuantity = parseFloat(totalQuantity?.toFixed(maxQuantityDecimal) || 0);
     totalSpent = parseFloat(totalSpent?.toFixed(decimalLength) || 0);
     averagePrice = parseFloat(averagePrice?.toFixed(decimalLength) || 0);
     return { totalQuantity, totalSpent, averagePrice };
